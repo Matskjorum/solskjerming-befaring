@@ -1,0 +1,2 @@
+# solskjerming-befaring
+Befaringsverktøy solskjerming
