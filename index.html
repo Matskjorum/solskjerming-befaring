@@ -24,6 +24,34 @@
       <input id="poststed" placeholder="Postnr / sted" />
       <input id="telefon" placeholder="Telefon" />
       <input id="epost" placeholder="E-post" />
+      <h3>Fjernkontroller og styring</h3>
+
+<select id="styringType">
+  <option value="">Velg produkt</option>
+  <option>Situo 1 io</option>
+  <option>Situo 5 io</option>
+  <option>Smoove Origin io</option>
+  <option>Situo 1 io a/m</option>
+  <option>Situo 5 io a/m</option>
+  <option>Solsensor</option>
+  <option>Vindsensor</option>
+  <option>Somfy TaHoma Switch</option>
+  <option>WT styring</option>
+</select>
+
+<input
+  id="styringAntall"
+  type="number"
+  min="1"
+  value="1"
+  placeholder="Antall"
+/>
+
+<button type="button" onclick="leggTilStyring()">
+  Legg til styring
+</button>
+
+<div id="styringListe"></div>
     </section>
 
     <section class="card">
