@@ -1,4 +1,60 @@
-let vinduer = JSON.parse(localStorage.getItem("vinduer")) || [];
+let prosjekter = JSON.parse(localStorage.getItem("prosjekter")) || [];
+let aktivtProsjektId = localStorage.getItem("aktivtProsjektId");
+
+let vinduer = [];
+
+function lagProsjektNummer() {
+  const aar = new Date().getFullYear();
+  const nummer = prosjekter.length + 1;
+  return `SB-${aar}-${String(nummer).padStart(3, "0")}`;
+}
+
+function nyttProsjekt() {
+  const prosjekt = {
+    id: Date.now().toString(),
+    prosjektNr: lagProsjektNummer(),
+    kundeNavn: "",
+    adresse: "",
+    poststed: "",
+    telefon: "",
+    epost: "",
+    vinduer: []
+  };
+
+  prosjekter.push(prosjekt);
+  aktivtProsjektId = prosjekt.id;
+
+  lagreProsjekter();
+  lastAktivtProsjekt();
+}
+
+function hentAktivtProsjekt() {
+  return prosjekter.find(p => p.id === aktivtProsjektId);
+}
+
+function lagreProsjekter() {
+  localStorage.setItem("prosjekter", JSON.stringify(prosjekter));
+  localStorage.setItem("aktivtProsjektId", aktivtProsjektId || "");
+}
+
+function velgProsjekt(id) {
+  aktivtProsjektId = id;
+  lagreProsjekter();
+  lastAktivtProsjekt();
+}
+
+function slettValgtProsjekt(id) {
+  if (!confirm("Er du sikker på at du vil slette dette prosjektet?")) return;
+
+  prosjekter = prosjekter.filter(p => p.id !== id);
+
+  if (aktivtProsjektId === id) {
+    aktivtProsjektId = prosjekter.length ? prosjekter[0].id : "";
+  }
+
+  lagreProsjekter();
+  lastAktivtProsjekt();
+}
 
 const felt = [
   "kundeNavn",
@@ -10,11 +66,15 @@ const felt = [
 
 felt.forEach(id => {
   const input = document.getElementById(id);
-  input.value = localStorage.getItem(id) || "";
 
   input.addEventListener("input", () => {
-    localStorage.setItem(id, input.value);
+    const prosjekt = hentAktivtProsjekt();
+    if (!prosjekt) return;
+
+    prosjekt[id] = input.value;
+    lagreProsjekter();
     visOversikt();
+    visProsjektListe();
   });
 });
 
@@ -38,8 +98,17 @@ function lagreVindu() {
     kommentar
   };
 
-  vinduer.push(vindu);
-  localStorage.setItem("vinduer", JSON.stringify(vinduer));
+const prosjekt = hentAktivtProsjekt();
+
+if (!prosjekt) {
+  alert("Opprett et prosjekt først.");
+  return;
+}
+
+prosjekt.vinduer.push(vindu);
+vinduer = prosjekt.vinduer;
+
+lagreProsjekter();
 
   tomVinduSkjema();
   visOversikt();
@@ -54,15 +123,22 @@ function tomVinduSkjema() {
 }
 
 function slettVindu(index) {
-  vinduer.splice(index, 1);
-  localStorage.setItem("vinduer", JSON.stringify(vinduer));
+  const prosjekt = hentAktivtProsjekt();
+  if (!prosjekt) return;
+
+  prosjekt.vinduer.splice(index, 1);
+  vinduer = prosjekt.vinduer;
+
+  lagreProsjekter();
   visOversikt();
 }
 
 function slettProsjekt() {
-  if (!confirm("Er du sikker på at du vil slette hele prosjektet?")) {
-    return;
-  }
+  const prosjekt = hentAktivtProsjekt();
+  if (!prosjekt) return;
+
+  slettValgtProsjekt(prosjekt.id);
+}
 
   localStorage.clear();
   vinduer = [];
@@ -421,3 +497,66 @@ function eksporterPDF() {
   const filnavn = `befaring-${kundeNavn.replaceAll(" ", "-")}.pdf`;
   doc.save(filnavn);
 }
+
+function visProsjektListe() {
+  const container = document.getElementById("prosjektListe");
+  if (!container) return;
+
+  if (prosjekter.length === 0) {
+    container.innerHTML = `<p class="small">Ingen prosjekter opprettet ennå.</p>`;
+    return;
+  }
+
+  let html = "";
+
+  prosjekter.forEach(p => {
+    const aktiv = p.id === aktivtProsjektId ? "aktivt-prosjekt" : "";
+
+    html += `
+      <div class="prosjekt-rad ${aktiv}">
+        <div>
+          <strong>${p.prosjektNr}</strong><br>
+          <span>${p.kundeNavn || "Uten kundenavn"}</span>
+        </div>
+
+        <div class="prosjekt-knapper">
+          <button onclick="velgProsjekt('${p.id}')">Åpne</button>
+          <button class="danger" onclick="slettValgtProsjekt('${p.id}')">Slett</button>
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+function lastAktivtProsjekt() {
+  if (prosjekter.length === 0) {
+    nyttProsjekt();
+    return;
+  }
+
+  if (!aktivtProsjektId) {
+    aktivtProsjektId = prosjekter[0].id;
+  }
+
+  const prosjekt = hentAktivtProsjekt();
+
+  if (!prosjekt) {
+    aktivtProsjektId = prosjekter[0].id;
+    lastAktivtProsjekt();
+    return;
+  }
+
+  vinduer = prosjekt.vinduer || [];
+
+  felt.forEach(id => {
+    document.getElementById(id).value = prosjekt[id] || "";
+  });
+
+  tomVinduSkjema();
+  visProsjektListe();
+  visOversikt();
+}
+
+lastAktivtProsjekt();
