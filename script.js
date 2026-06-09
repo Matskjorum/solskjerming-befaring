@@ -140,16 +140,7 @@ function slettProsjekt() {
   slettValgtProsjekt(prosjekt.id);
 }
 
-  localStorage.clear();
-  vinduer = [];
-
-  felt.forEach(id => {
-    document.getElementById(id).value = "";
-  });
-
-  tomVinduSkjema();
-  visOversikt();
-
+ 
 function visOversikt() {
   const oversikt = document.getElementById("oversikt");
 
