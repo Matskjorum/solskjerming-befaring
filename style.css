@@ -1,27 +1,63 @@
+:root {
+  --blue: #0f2f4f;
+  --blue-light: #1f6feb;
+  --bg: #eef2f6;
+  --card: #ffffff;
+  --text: #1f2933;
+  --muted: #6b7280;
+  --border: #d8dee6;
+  --danger: #c62828;
+  --success: #1b7f3a;
+}
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f2f4f7;
-  color: #222;
+  background: linear-gradient(180deg, #dfeaf3 0%, #f5f7fa 260px);
+  color: var(--text);
 }
 
 .app {
-  max-width: 700px;
+  max-width: 780px;
   margin: 0 auto;
   padding: 16px;
 }
 
 h1 {
+  background: var(--blue);
+  color: white;
+  padding: 22px 16px;
+  border-radius: 18px;
   text-align: center;
-  margin-bottom: 20px;
+  margin: 8px 0 18px;
+  font-size: 28px;
+  box-shadow: 0 8px 20px rgba(15, 47, 79, 0.22);
+}
+
+h1::before {
+  content: "☀️ ";
 }
 
 .card {
-  background: white;
-  padding: 16px;
+  background: var(--card);
+  padding: 18px;
   margin-bottom: 16px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 22px rgba(31, 41, 51, 0.08);
+}
+
+.card h2 {
+  margin-top: 0;
+  color: var(--blue);
+  font-size: 20px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+}
+
+.card h3 {
+  color: var(--blue);
+  margin-top: 22px;
 }
 
 input,
@@ -29,11 +65,20 @@ select,
 textarea {
   width: 100%;
   box-sizing: border-box;
-  margin-bottom: 10px;
-  padding: 12px;
+  margin-bottom: 11px;
+  padding: 13px;
   font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fbfcfd;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--blue-light);
+  box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.14);
 }
 
 textarea {
@@ -46,48 +91,69 @@ button {
   padding: 14px;
   margin-top: 8px;
   font-size: 16px;
+  font-weight: bold;
   border: none;
-  border-radius: 8px;
-  background: #1f6feb;
+  border-radius: 14px;
+  background: var(--blue-light);
   color: white;
   cursor: pointer;
+  box-shadow: 0 5px 12px rgba(31, 111, 235, 0.22);
+}
+
+button:hover {
+  filter: brightness(0.96);
 }
 
 button.secondary {
-  background: #666;
+  background: #5f6b7a;
 }
 
 button.danger {
-  background: #c62828;
+  background: var(--danger);
 }
 
 .vindu {
-  border-top: 1px solid #ddd;
-  padding: 12px 0;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-left: 5px solid var(--blue-light);
+  border-radius: 14px;
+  padding: 14px;
+  margin: 12px 0;
 }
 
 .vindu h3 {
-  margin-bottom: 4px;
+  margin: 0 0 8px;
+  color: var(--blue);
+}
+
+.vindu h3::before {
+  content: "🪟 ";
 }
 
 .small {
-  color: #666;
+  color: var(--muted);
   font-size: 14px;
 }
+
 .prosjekt-rad {
   display: flex;
   justify-content: space-between;
   gap: 10px;
   align-items: center;
-  padding: 12px;
+  padding: 14px;
   margin-top: 10px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background: #fafafa;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.prosjekt-rad::before {
+  content: "📁";
+  font-size: 24px;
 }
 
 .aktivt-prosjekt {
-  border: 2px solid #1f6feb;
+  border: 2px solid var(--blue-light);
   background: #eef5ff;
 }
 
@@ -101,4 +167,33 @@ button.danger {
   padding: 8px 10px;
   margin: 0;
   font-size: 14px;
+}
+
+#styringListe .prosjekt-rad::before {
+  content: "🎛️";
+}
+
+@media (max-width: 600px) {
+  .app {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 23px;
+    border-radius: 14px;
+  }
+
+  .card {
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  .prosjekt-rad {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .prosjekt-knapper {
+    justify-content: flex-start;
+  }
 }
