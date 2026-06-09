@@ -112,7 +112,7 @@ function visOversikt() {
 
 function eksporterPDF() {
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
+  const doc = new jsPDF("p", "mm", "a4");
 
   const kundeNavn = document.getElementById("kundeNavn").value || "-";
   const adresse = document.getElementById("adresse").value || "-";
@@ -121,93 +121,302 @@ function eksporterPDF() {
   const epost = document.getElementById("epost").value || "-";
 
   const dato = new Date().toLocaleDateString("no-NO");
+  const rapportId = new Date().toISOString().slice(0, 10).replaceAll("-", "") + "-001";
 
-  let y = 15;
+  const navy = [0, 38, 84];
+  const lightGrey = [230, 230, 230];
+  const border = [160, 160, 160];
 
-  // Topp
-  doc.setFillColor(31, 111, 235);
-  doc.rect(0, 0, 210, 25, "F");
+  function header() {
+    doc.setTextColor(...navy);
+    doc.setFontSize(24);
+    doc.setFont(undefined, "bold");
+    doc.text("SOLSKJERMING", 12, 18);
 
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(18);
-  doc.text("Befaringsrapport - Solskjerming", 15, 16);
+    doc.setTextColor(90, 90, 90);
+    doc.setFontSize(14);
+    doc.text("BEFARINGSRAPPORT", 12, 27);
 
-  doc.setFontSize(10);
-  doc.text(`Dato: ${dato}`, 160, 16);
+    doc.setFontSize(9);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont(undefined, "normal");
+    doc.text(`Dato: ${dato}`, 155, 15);
+    doc.text(`Rapport-ID: ${rapportId}`, 155, 22);
 
-  // Kundeinfo
-  y = 38;
-  doc.setTextColor(0, 0, 0);
-  doc.setFontSize(14);
-  doc.text("Kundeinformasjon", 15, y);
-
-  y += 6;
-  doc.setDrawColor(220, 220, 220);
-  doc.rect(15, y, 180, 34);
-
-  y += 8;
-  doc.setFontSize(11);
-  doc.text(`Kunde: ${kundeNavn}`, 20, y);
-  y += 6;
-  doc.text(`Adresse: ${adresse}`, 20, y);
-  y += 6;
-  doc.text(`Postnr / sted: ${poststed}`, 20, y);
-  y += 6;
-  doc.text(`Telefon: ${telefon}`, 20, y);
-  y += 6;
-  doc.text(`E-post: ${epost}`, 20, y);
-
-  // Vinduer
-  y += 16;
-  doc.setFontSize(14);
-  doc.text("Registrerte vinduer", 15, y);
-
-  y += 8;
-
-  if (vinduer.length === 0) {
-    doc.setFontSize(11);
-    doc.text("Ingen vinduer registrert.", 15, y);
+    doc.setDrawColor(...navy);
+    doc.setLineWidth(0.8);
+    doc.line(12, 33, 198, 33);
   }
 
-  vinduer.forEach((vindu, index) => {
-    if (y > 240) {
-      doc.addPage();
-      y = 20;
+  function sectionTitle(title, x, y, w) {
+    doc.setFillColor(...lightGrey);
+    doc.rect(x, y, w, 8, "F");
+    doc.setTextColor(...navy);
+    doc.setFontSize(11);
+    doc.setFont(undefined, "bold");
+    doc.text(title, x + 3, y + 5.5);
+  }
+
+  function customerTable() {
+    sectionTitle("KUNDEINFORMASJON", 12, 42, 90);
+
+    const rows = [
+      ["Kunde:", kundeNavn],
+      ["Adresse:", adresse],
+      ["Postnr / sted:", poststed],
+      ["Telefon:", telefon],
+      ["E-post:", epost],
+    ];
+
+    let y = 50;
+    rows.forEach(row => {
+      doc.setDrawColor(...border);
+      doc.rect(12, y, 90, 8);
+      doc.line(47, y, 47, y + 8);
+
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(9);
+      doc.setFont(undefined, "bold");
+      doc.text(row[0], 15, y + 5.2);
+
+      doc.setFont(undefined, "normal");
+      doc.text(String(row[1]), 50, y + 5.2);
+
+      y += 8;
+    });
+  }
+
+  function projectTable() {
+    sectionTitle("PROSJEKTINFORMASJON", 108, 42, 90);
+
+    const rows = [
+      ["Prosjekt:", "Solskjerming"],
+      ["Prosjektadr.:", `${adresse}, ${poststed}`],
+      ["Utført av:", "-"],
+      ["Kontaktperson:", "-"],
+    ];
+
+    let y = 50;
+    rows.forEach(row => {
+      doc.setDrawColor(...border);
+      doc.rect(108, y, 90, 8);
+      doc.line(148, y, 148, y + 8);
+
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(9);
+      doc.setFont(undefined, "bold");
+      doc.text(row[0], 111, y + 5.2);
+
+      doc.setFont(undefined, "normal");
+      const value = doc.splitTextToSize(String(row[1]), 45);
+      doc.text(value[0], 151, y + 5.2);
+
+      y += 8;
+    });
+  }
+
+  function windowsTable(startY) {
+    sectionTitle("REGISTRERTE VINDUER", 12, startY, 186);
+
+    let y = startY + 10;
+
+    const col = {
+      nr: 12,
+      plassering: 25,
+      type: 62,
+      mal: 107,
+      kommentar: 145,
+    };
+
+    doc.setFillColor(...navy);
+    doc.rect(12, y, 186, 9, "F");
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(9);
+    doc.setFont(undefined, "bold");
+    doc.text("NR.", col.nr + 4, y + 6);
+    doc.text("PLASSERING", col.plassering + 2, y + 6);
+    doc.text("TYPE", col.type + 2, y + 6);
+    doc.text("MÅL (MM)", col.mal + 2, y + 6);
+    doc.text("KOMMENTAR", col.kommentar + 2, y + 6);
+
+    y += 9;
+
+    if (vinduer.length === 0) {
+      doc.setTextColor(0, 0, 0);
+      doc.text("Ingen vinduer registrert.", 15, y + 6);
+      return y + 15;
     }
 
-    // Kort-boks
-    doc.setFillColor(245, 247, 250);
-    doc.setDrawColor(220, 220, 220);
-    doc.roundedRect(15, y, 180, 42, 3, 3, "FD");
+    vinduer.forEach((vindu, index) => {
+      if (y > 255) {
+        footer();
+        doc.addPage();
+        header();
+        y = 42;
+      }
 
-    doc.setTextColor(31, 111, 235);
-    doc.setFontSize(13);
-    doc.text(`Vindu ${index + 1}: ${vindu.plassering}`, 20, y + 8);
+      const kommentar = doc.splitTextToSize(vindu.kommentar || "-", 48);
+      const rowHeight = Math.max(10, kommentar.length * 5 + 4);
+
+      doc.setDrawColor(...border);
+      doc.rect(12, y, 186, rowHeight);
+      doc.line(25, y, 25, y + rowHeight);
+      doc.line(62, y, 62, y + rowHeight);
+      doc.line(107, y, 107, y + rowHeight);
+      doc.line(145, y, 145, y + rowHeight);
+
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(9);
+      doc.setFont(undefined, "bold");
+      doc.text(String(index + 1).padStart(2, "0"), 16, y + 6);
+
+      doc.setFont(undefined, "normal");
+      doc.text(vindu.plassering || "-", 28, y + 6);
+      doc.text(vindu.type || "-", 65, y + 6);
+      doc.text(`${vindu.bredde} x ${vindu.hoyde}`, 110, y + 6);
+      doc.text(kommentar, 148, y + 6);
+
+      y += rowHeight;
+    });
+
+    return y + 10;
+  }
+
+  function summaryBox(y) {
+    sectionTitle("OPPSUMMERING", 12, y, 90);
+
+    const totalAreal = vinduer.reduce((sum, v) => {
+      const b = Number(v.bredde) || 0;
+      const h = Number(v.hoyde) || 0;
+      return sum + (b * h) / 1000000;
+    }, 0);
+
+    const rows = [
+      ["Antall vinduer / enheter:", String(vinduer.length)],
+      ["Totalt areal estimert:", `${totalAreal.toFixed(2).replace(".", ",")} m²`],
+      ["Kommentar:", "-"],
+    ];
+
+    y += 8;
+
+    rows.forEach(row => {
+      doc.setDrawColor(...border);
+      doc.rect(12, y, 90, 10);
+      doc.line(68, y, 68, y + 10);
+
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(9);
+      doc.setFont(undefined, "bold");
+      doc.text(row[0], 15, y + 6);
+
+      doc.setFont(undefined, "normal");
+      doc.text(row[1], 95, y + 6, { align: "right" });
+
+      y += 10;
+    });
+  }
+
+  function termsBox(y) {
+    sectionTitle("BETINGELSER", 108, y, 90);
+
+    y += 12;
+    doc.setDrawColor(...border);
+    doc.rect(108, y - 4, 90, 34);
 
     doc.setTextColor(0, 0, 0);
-    doc.setFontSize(11);
-    doc.text(`Type: ${vindu.type}`, 20, y + 16);
-    doc.text(`Mål: ${vindu.bredde} x ${vindu.hoyde} mm`, 20, y + 23);
+    doc.setFontSize(8);
+    doc.setFont(undefined, "normal");
 
-    const kommentar = doc.splitTextToSize(
-      `Kommentar: ${vindu.kommentar || "-"}`,
-      165
-    );
+    const terms = [
+      "Befaring er basert på mål oppgitt på stedet.",
+      "Tilbud/bestilling må kontrolleres før produksjon.",
+      "Forbehold om skrivefeil.",
+      "Eventuelle tillegg avtales skriftlig.",
+    ];
 
-    doc.text(kommentar, 20, y + 31);
-
-    y += 50;
-  });
-
-  // Footer
-  const pageCount = doc.internal.getNumberOfPages();
-
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i);
-    doc.setFontSize(9);
-    doc.setTextColor(120, 120, 120);
-    doc.text(`Side ${i} av ${pageCount}`, 170, 287);
+    terms.forEach(t => {
+      doc.text("•", 112, y);
+      doc.text(t, 117, y);
+      y += 6;
+    });
   }
+
+  function signatureBox(y) {
+    sectionTitle("SIGNATUR / GODKJENNING", 12, y, 186);
+
+    y += 8;
+    doc.setDrawColor(...border);
+    doc.rect(12, y, 186, 36);
+    doc.line(105, y, 105, y + 36);
+
+    doc.setFontSize(9);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont(undefined, "bold");
+
+    doc.text("Utført av:", 16, y + 8);
+    doc.text("Kunde godkjent:", 110, y + 8);
+
+    doc.setFont(undefined, "normal");
+    doc.text(".........................................................", 16, y + 18);
+    doc.text(".........................................................", 110, y + 18);
+
+    doc.setFont(undefined, "bold");
+    doc.text("Dato:", 16, y + 28);
+    doc.text("Dato:", 110, y + 28);
+
+    doc.setFont(undefined, "normal");
+    doc.text("..................................", 30, y + 28);
+    doc.text("..................................", 124, y + 28);
+  }
+
+  function footer() {
+    const page = doc.internal.getCurrentPageInfo().pageNumber;
+    const pages = doc.internal.getNumberOfPages();
+
+    doc.setDrawColor(...navy);
+    doc.setLineWidth(0.5);
+    doc.line(12, 282, 198, 282);
+
+    doc.setFontSize(8);
+    doc.setTextColor(60, 60, 60);
+    doc.text("Solskjerming - Befaringsrapport", 12, 288);
+    doc.text(`Side ${page} av ${pages}`, 180, 288);
+  }
+
+  // Side 1
+  header();
+
+  doc.setTextColor(...navy);
+  doc.setFontSize(22);
+  doc.setFont(undefined, "bold");
+  doc.text("BEFARINGSRAPPORT", 105, 39, { align: "center" });
+
+  customerTable();
+  projectTable();
+
+  const afterWindowsY = windowsTable(92);
+
+  if (afterWindowsY < 245) {
+    sectionTitle("MERKNADER", 12, afterWindowsY, 186);
+    doc.setDrawColor(...border);
+    doc.rect(12, afterWindowsY + 9, 186, 22);
+    doc.setFontSize(9);
+    doc.setTextColor(0, 0, 0);
+    doc.text("-", 16, afterWindowsY + 18);
+  }
+
+  footer();
+
+  // Side 2
+  doc.addPage();
+  header();
+
+  summaryBox(48);
+  termsBox(48);
+  signatureBox(105);
+
+  footer();
 
   const filnavn = `befaring-${kundeNavn.replaceAll(" ", "-")}.pdf`;
   doc.save(filnavn);
