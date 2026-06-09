@@ -149,7 +149,6 @@ function slettProsjekt() {
 
   tomVinduSkjema();
   visOversikt();
-}
 
 function visOversikt() {
   const oversikt = document.getElementById("oversikt");
