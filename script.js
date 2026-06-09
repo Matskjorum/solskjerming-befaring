@@ -83,6 +83,9 @@ function lagreVindu() {
   const type = document.getElementById("type").value;
   const bredde = document.getElementById("bredde").value;
   const hoyde = document.getElementById("hoyde").value;
+ const kassefarge = document.getElementById("kassefarge").value;
+const duk = document.getElementById("duk").value;
+const brakett = document.getElementById("brakett").value;
   const kommentar = document.getElementById("kommentar").value;
 
   if (!plassering || !type || !bredde || !hoyde) {
@@ -90,13 +93,16 @@ function lagreVindu() {
     return;
   }
 
-  const vindu = {
-    plassering,
-    type,
-    bredde,
-    hoyde,
-    kommentar
-  };
+ const vindu = {
+  plassering,
+  type,
+  bredde,
+  hoyde,
+  kassefarge,
+  duk,
+  brakett,
+  kommentar
+};
 
 const prosjekt = hentAktivtProsjekt();
 
@@ -119,6 +125,9 @@ function tomVinduSkjema() {
   document.getElementById("type").value = "";
   document.getElementById("bredde").value = "";
   document.getElementById("hoyde").value = "";
+  document.getElementById("kassefarge").value = "";
+document.getElementById("duk").value = "";
+document.getElementById("brakett").value = "";
   document.getElementById("kommentar").value = "";
 }
 
@@ -167,7 +176,10 @@ function visOversikt() {
         <h3>Vindu ${index + 1}: ${vindu.plassering}</h3>
         <p><strong>Type:</strong> ${vindu.type}</p>
         <p><strong>Mål:</strong> ${vindu.bredde} x ${vindu.hoyde} mm</p>
-        <p><strong>Kommentar:</strong><br>${vindu.kommentar || "-"}</p>
+        <p><strong>Kassefarge:</strong> ${vindu.kassefarge || "-"}</p>
+<p><strong>Duk:</strong> ${vindu.duk || "-"}</p>
+<p><strong>Brakett:</strong> ${vindu.brakett || "-"}</p>
+<p><strong>Kommentar:</strong><br>${vindu.kommentar || "-"}</p>
         <button class="danger" onclick="slettVindu(${index})">Slett vindu</button>
       </div>
     `;
@@ -304,7 +316,7 @@ function eksporterPDF() {
     doc.text("PLASSERING", col.plassering + 2, y + 6);
     doc.text("TYPE", col.type + 2, y + 6);
     doc.text("MÅL (MM)", col.mal + 2, y + 6);
-    doc.text("KOMMENTAR", col.kommentar + 2, y + 6);
+    doc.text("DETALJER", col.kommentar + 2, y + 6);
 
     y += 9;
 
@@ -322,7 +334,13 @@ function eksporterPDF() {
         y = 42;
       }
 
-      const kommentar = doc.splitTextToSize(vindu.kommentar || "-", 48);
+     const detaljerTekst =
+  `Kasse: ${vindu.kassefarge || "-"}\n` +
+  `Duk: ${vindu.duk || "-"}\n` +
+  `Brakett: ${vindu.brakett || "-"}\n` +
+  `Kommentar: ${vindu.kommentar || "-"}`;
+
+const kommentar = doc.splitTextToSize(detaljerTekst, 48);
       const rowHeight = Math.max(10, kommentar.length * 5 + 4);
 
       doc.setDrawColor(...border);
