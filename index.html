@@ -1,1 +1,56 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solskjerming Befaring</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <h1>Solskjerming Befaring</h1>
 
+    <section class="card">
+      <h2>Kundeinfo</h2>
+
+      <input id="kundeNavn" placeholder="Kundenavn" />
+      <input id="adresse" placeholder="Adresse" />
+      <input id="poststed" placeholder="Postnr / sted" />
+      <input id="telefon" placeholder="Telefon" />
+      <input id="epost" placeholder="E-post" />
+    </section>
+
+    <section class="card">
+      <h2>Legg til vindu</h2>
+
+      <input id="plassering" placeholder="Plassering, f.eks. Stue venstre" />
+
+      <select id="type">
+        <option value="">Velg type</option>
+        <option>Screen Zipner 80</option>
+        <option>Screen Zipner 90</option>
+        <option>Screen Zipner 110</option>
+        <option>Screen Zipner 150</option>
+        <option>Markise</option>
+      </select>
+
+      <input id="bredde" type="number" placeholder="Bredde i mm" />
+      <input id="hoyde" type="number" placeholder="Høyde i mm" />
+
+      <textarea id="kommentar" placeholder="Kommentar: kassefarge, dukfarge, type brakett osv."></textarea>
+
+      <button onclick="lagreVindu()">Lagre vindu</button>
+      <button class="secondary" onclick="tomVinduSkjema()">Tøm vindusskjema</button>
+    </section>
+
+    <section class="card">
+      <h2>Prosjektoversikt</h2>
+      <div id="oversikt"></div>
+
+      <button class="danger" onclick="slettProsjekt()">Slett hele prosjektet</button>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
