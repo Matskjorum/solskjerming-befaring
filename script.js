@@ -2,6 +2,7 @@ let prosjekter = JSON.parse(localStorage.getItem("prosjekter")) || [];
 let aktivtProsjektId = localStorage.getItem("aktivtProsjektId");
 
 let vinduer = [];
+let styringer = [];
 
 function lagProsjektNummer() {
   const aar = new Date().getFullYear();
@@ -18,7 +19,8 @@ function nyttProsjekt() {
     poststed: "",
     telefon: "",
     epost: "",
-    vinduer: []
+    vinduer: [],
+styringer: []
   };
 
   prosjekter.push(prosjekt);
@@ -564,7 +566,78 @@ function lastAktivtProsjekt() {
 
   tomVinduSkjema();
   visProsjektListe();
-  visOversikt();
+visOversikt();
+visStyringer();
+}
+function leggTilStyring() {
+  const prosjekt = hentAktivtProsjekt();
+  if (!prosjekt) return;
+
+  const type = document.getElementById("styringType").value;
+  const antall = document.getElementById("styringAntall").value;
+
+  if (!type) {
+    alert("Velg produkt.");
+    return;
+  }
+
+  prosjekt.styringer.push({
+    type,
+    antall
+  });
+
+  lagreProsjekter();
+
+  document.getElementById("styringType").value = "";
+  document.getElementById("styringAntall").value = 1;
+
+  visStyringer();
 }
 
+function slettStyring(index) {
+  const prosjekt = hentAktivtProsjekt();
+  if (!prosjekt) return;
+
+  prosjekt.styringer.splice(index, 1);
+
+  lagreProsjekter();
+  visStyringer();
+}
+
+function visStyringer() {
+  const container = document.getElementById("styringListe");
+  const prosjekt = hentAktivtProsjekt();
+
+  if (!container || !prosjekt) return;
+
+  if (!prosjekt.styringer || prosjekt.styringer.length === 0) {
+    container.innerHTML =
+      '<p class="small">Ingen styringer registrert.</p>';
+    return;
+  }
+
+  let html = "<h4>Registrerte produkter</h4>";
+
+  prosjekt.styringer.forEach((s, index) => {
+    html += `
+      <div class="prosjekt-rad">
+        <div>
+          <strong>${s.type}</strong><br>
+          ${s.antall} stk
+        </div>
+
+        <div>
+          <button
+            class="danger"
+            onclick="slettStyring(${index})"
+          >
+            Slett
+          </button>
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
 lastAktivtProsjekt();
