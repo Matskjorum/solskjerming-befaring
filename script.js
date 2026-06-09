@@ -368,7 +368,48 @@ const kommentar = doc.splitTextToSize(detaljerTekst, 48);
 
     return y + 10;
   }
+  function steeringBox(y) {
+  const prosjekt = hentAktivtProsjekt();
+  const styringer = prosjekt?.styringer || [];
 
+  sectionTitle("FJERNKONTROLLER OG STYRING", 12, y, 186);
+
+  y += 10;
+
+  doc.setFillColor(...navy);
+  doc.rect(12, y, 186, 9, "F");
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(9);
+  doc.setFont(undefined, "bold");
+  doc.text("PRODUKT", 16, y + 6);
+  doc.text("ANTALL", 170, y + 6);
+
+  y += 9;
+
+  if (styringer.length === 0) {
+    doc.setTextColor(0, 0, 0);
+    doc.setFont(undefined, "normal");
+    doc.text("Ingen styringer registrert.", 16, y + 7);
+    return y + 18;
+  }
+
+  styringer.forEach(s => {
+    doc.setDrawColor(...border);
+    doc.rect(12, y, 186, 9);
+    doc.line(160, y, 160, y + 9);
+
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(9);
+    doc.setFont(undefined, "normal");
+    doc.text(s.type || "-", 16, y + 6);
+    doc.text(`${s.antall || 1} stk`, 180, y + 6, { align: "center" });
+
+    y += 9;
+  });
+
+  return y + 10;
+}
   function summaryBox(y) {
     sectionTitle("OPPSUMMERING", 12, y, 90);
 
@@ -499,8 +540,11 @@ const kommentar = doc.splitTextToSize(detaljerTekst, 48);
   header();
 
   summaryBox(48);
-  termsBox(48);
-  signatureBox(105);
+termsBox(48);
+
+const etterStyring = steeringBox(95);
+
+signatureBox(etterStyring + 5);
 
   footer();
 
