@@ -94,7 +94,35 @@ const brakett = document.getElementById("brakett").value;
     alert("Fyll inn plassering, type, bredde og høyde.");
     return;
   }
+const prosjekt = hentAktivtProsjekt();
 
+if (!prosjekt) {
+  alert("Opprett et prosjekt først.");
+  return;
+}
+
+const harAndreVinduer = prosjekt.vinduer.length > 0;
+
+if (harAndreVinduer) {
+  const annenKassefarge = prosjekt.vinduer.some(v =>
+    v.kassefarge && kassefarge && v.kassefarge !== kassefarge
+  );
+
+  const annenDuk = prosjekt.vinduer.some(v =>
+    v.duk && duk && v.duk !== duk
+  );
+
+  if (annenKassefarge || annenDuk) {
+    const fortsett = confirm(
+      "Dette vinduet har annen kassefarge eller duk enn tidligere vinduer i prosjektet.\n\n" +
+      "Er dette riktig?"
+    );
+
+    if (!fortsett) {
+      return;
+    }
+  }
+}
  const vindu = {
   plassering,
   type,
@@ -106,12 +134,6 @@ const brakett = document.getElementById("brakett").value;
   kommentar
 };
 
-const prosjekt = hentAktivtProsjekt();
-
-if (!prosjekt) {
-  alert("Opprett et prosjekt først.");
-  return;
-}
 
 prosjekt.vinduer.push(vindu);
 vinduer = prosjekt.vinduer;
