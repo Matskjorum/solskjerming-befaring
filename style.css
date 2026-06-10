@@ -197,3 +197,111 @@ button.danger {
     justify-content: flex-start;
   }
 }
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: white;
+  border-radius: 22px;
+  padding: 18px;
+  margin-bottom: 18px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  border-left: 8px solid #39a935;
+}
+
+.logo-wrap {
+  background: #f4f7f4;
+  border-radius: 18px;
+  padding: 10px;
+}
+
+.logo {
+  width: 150px;
+  max-width: 100%;
+  display: block;
+}
+
+.app-header h1 {
+  background: none;
+  color: #102033;
+  box-shadow: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  font-size: 30px;
+  border-radius: 0;
+}
+
+.app-header h1::before {
+  content: "";
+}
+
+.app-header p {
+  margin: 4px 0 0;
+  color: #39a935;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.card {
+  border-top: 4px solid #39a935;
+}
+
+.card h2::before {
+  margin-right: 6px;
+}
+
+.card:nth-of-type(1) h2::before {
+  content: "📁";
+}
+
+.card:nth-of-type(2) h2::before {
+  content: "👤";
+}
+
+.card:nth-of-type(3) h2::before {
+  content: "🪟";
+}
+
+.card:nth-of-type(4) h2::before {
+  content: "📄";
+}
+
+button {
+  background: linear-gradient(135deg, #39a935, #218728);
+}
+
+button.danger {
+  background: #c62828;
+}
+
+button.secondary {
+  background: #58616d;
+}
+
+@media (min-width: 900px) {
+  .app {
+    max-width: 1180px;
+  }
+
+  .card {
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .app-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .app-header h1 {
+    text-align: center;
+    font-size: 24px;
+  }
+
+  .logo {
+    width: 180px;
+  }
+}
