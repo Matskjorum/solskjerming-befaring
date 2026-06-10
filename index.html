@@ -8,6 +8,15 @@
 </head>
 <body>
   <div class="app">
+    <nav class="side-menu">
+  <button onclick="velgStatus('befaring')">📋 Befaringer</button>
+  <button onclick="velgStatus('tilbud')">💰 Tilbud under arbeid</button>
+  <button onclick="velgStatus('sendt')">📤 Sendte tilbud</button>
+  <button onclick="velgStatus('akseptert')">✅ Akseptert</button>
+  <button onclick="velgStatus('avslatt')">❌ Ikke akseptert</button>
+</nav>
+
+<main class="main-content">
    <header class="app-header">
   <div class="logo-wrap">
     <img src="logo.png.png" alt="Innlandet Solskjerming" class="logo" />
@@ -222,6 +231,7 @@
       <button onclick="eksporterFabrikkPDF()">Eksporter fabrikk-PDF</button>
   <button class="danger" onclick="slettProsjekt()">Slett hele prosjektet</button>
 </section>
+  </main>
   </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="script.js"></script>
