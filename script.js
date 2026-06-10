@@ -133,6 +133,34 @@ document.getElementById("brakett").value = "";
   document.getElementById("kommentar").value = "";
 }
 
+function redigerVindu(index) {
+  const prosjekt = hentAktivtProsjekt();
+  if (!prosjekt) return;
+
+  const vindu = prosjekt.vinduer[index];
+  if (!vindu) return;
+
+  document.getElementById("plassering").value = vindu.plassering || "";
+  document.getElementById("type").value = vindu.type || "";
+  document.getElementById("bredde").value = vindu.bredde || "";
+  document.getElementById("hoyde").value = vindu.hoyde || "";
+  document.getElementById("kassefarge").value = vindu.kassefarge || "";
+  document.getElementById("duk").value = vindu.duk || "";
+  document.getElementById("brakett").value = vindu.brakett || "";
+  document.getElementById("kommentar").value = vindu.kommentar || "";
+
+  prosjekt.vinduer.splice(index, 1);
+  vinduer = prosjekt.vinduer;
+
+  lagreProsjekter();
+  visOversikt();
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+
 function dupliserVindu(index) {
   const prosjekt = hentAktivtProsjekt();
   if (!prosjekt) return;
@@ -201,6 +229,7 @@ function visOversikt() {
 <p><strong>Duk:</strong> ${vindu.duk || "-"}</p>
 <p><strong>Brakett:</strong> ${vindu.brakett || "-"}</p>
 <p><strong>Kommentar:</strong><br>${vindu.kommentar || "-"}</p>
+        <button onclick="redigerVindu(${index})">Rediger</button>
         <button onclick="dupliserVindu(${index})">Dupliser vindu</button>
 <button class="danger" onclick="slettVindu(${index})">Slett vindu</button>
       </div>
