@@ -22,6 +22,15 @@ function nyttProsjekt() {
     telefon: "",
     epost: "",
 status: "befaring",
+
+tillegg: {
+  stillas: "",
+  lift: "",
+  elektro: "",
+  frakt: "",
+  annet: ""
+},
+
 vinduer: [],
 styringer: []
   };
@@ -223,7 +232,28 @@ function slettVindu(index) {
 
   prosjekt.vinduer.splice(index, 1);
   vinduer = prosjekt.vinduer;
+(prosjekt.styringer || []).forEach((s, index) => {
+  const felt =
+    document.getElementById(`styringPris_${index}`);
 
+  s.pris = felt ? felt.value : "";
+});
+  prosjekt.tillegg = {
+  stillas:
+    document.getElementById("tillegg_stillas")?.value || "",
+
+  lift:
+    document.getElementById("tillegg_lift")?.value || "",
+
+  elektro:
+    document.getElementById("tillegg_elektro")?.value || "",
+
+  frakt:
+    document.getElementById("tillegg_frakt")?.value || "",
+
+  annet:
+    document.getElementById("tillegg_annet")?.value || ""
+};
   lagreProsjekter();
   visOversikt();
 }
@@ -1007,6 +1037,113 @@ function visTilbud() {
     `;
   });
 
+  html += `<h2>🎛 Styring</h2>`;
+  (prosjekt.styringer || []).forEach((s, index) => {
+  html += `
+    <div class="vindu">
+      <h3>${s.type}</h3>
+
+      <p>${s.antall} stk</p>
+
+      <input
+        id="styringPris_${index}"
+        type="number"
+        placeholder="Pris pr stk"
+        value="${s.pris || ""}"
+      >
+    </div>
+  `;
+});
+  html += `
+  <h2>🚜 Tillegg</h2>
+
+  <input
+    id="tillegg_stillas"
+    type="number"
+    placeholder="Stillas"
+    value="${prosjekt.tillegg?.stillas || ""}"
+  >
+
+  <input
+    id="tillegg_lift"
+    type="number"
+    placeholder="Lift"
+    value="${prosjekt.tillegg?.lift || ""}"
+  >
+
+  <input
+    id="tillegg_elektro"
+    type="number"
+    placeholder="Elektro"
+    value="${prosjekt.tillegg?.elektro || ""}"
+  >
+
+  <input
+    id="tillegg_frakt"
+    type="number"
+    placeholder="Frakt"
+    value="${prosjekt.tillegg?.frakt || ""}"
+  >
+
+  <input
+    id="tillegg_annet"
+    type="number"
+    placeholder="Annet"
+    value="${prosjekt.tillegg?.annet || ""}"
+  >
+`;
+  let produktSum = 0;
+let montasjeSum = 0;
+let styringSum = 0;
+
+prosjekt.vinduer.forEach(v => {
+  produktSum += Number(v.pris || 0);
+  montasjeSum += Number(v.montasje || 0);
+});
+
+(prosjekt.styringer || []).forEach(s => {
+  styringSum +=
+    Number(s.antall || 0) *
+    Number(s.pris || 0);
+});
+
+const tilleggSum =
+  Number(prosjekt.tillegg?.stillas || 0) +
+  Number(prosjekt.tillegg?.lift || 0) +
+  Number(prosjekt.tillegg?.elektro || 0) +
+  Number(prosjekt.tillegg?.frakt || 0) +
+  Number(prosjekt.tillegg?.annet || 0);
+
+const sumEks =
+  produktSum +
+  montasjeSum +
+  styringSum +
+  tilleggSum;
+
+const mva = sumEks * 0.25;
+const total = sumEks + mva;
+
+html += `
+  <div class="card">
+    <h2>📊 Kalkyle</h2>
+
+    <p>Produkter: ${produktSum.toLocaleString("no-NO")} kr</p>
+    <p>Montasje: ${montasjeSum.toLocaleString("no-NO")} kr</p>
+    <p>Styring: ${styringSum.toLocaleString("no-NO")} kr</p>
+    <p>Tillegg: ${tilleggSum.toLocaleString("no-NO")} kr</p>
+
+    <hr>
+
+    <p><strong>Sum eks mva:</strong>
+    ${sumEks.toLocaleString("no-NO")} kr</p>
+
+    <p><strong>MVA:</strong>
+    ${mva.toLocaleString("no-NO")} kr</p>
+
+    <p><strong>Total:</strong>
+    ${total.toLocaleString("no-NO")} kr</p>
+  </div>
+`;
   html += `
     <button onclick="lagreTilbudspriser()">
       💾 Lagre tilbudspriser
