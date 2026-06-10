@@ -200,7 +200,8 @@ function visOversikt() {
 <p><strong>Duk:</strong> ${vindu.duk || "-"}</p>
 <p><strong>Brakett:</strong> ${vindu.brakett || "-"}</p>
 <p><strong>Kommentar:</strong><br>${vindu.kommentar || "-"}</p>
-        <button class="danger" onclick="slettVindu(${index})">Slett vindu</button>
+        <button onclick="dupliserVindu(${index})">Dupliser vindu</button>
+<button class="danger" onclick="slettVindu(${index})">Slett vindu</button>
       </div>
     `;
   });
