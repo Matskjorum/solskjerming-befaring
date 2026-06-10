@@ -305,3 +305,47 @@ button.secondary {
     width: 180px;
   }
 }
+.app {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 18px;
+  max-width: 1200px;
+}
+
+.side-menu {
+  position: sticky;
+  top: 12px;
+  align-self: start;
+  background: #0f2f4f;
+  padding: 14px;
+  border-radius: 20px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+}
+
+.side-menu button {
+  width: 100%;
+  margin-bottom: 10px;
+  background: transparent;
+  box-shadow: none;
+  text-align: left;
+  border: 1px solid rgba(255,255,255,0.18);
+}
+
+.side-menu button:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+.main-content {
+  min-width: 0;
+}
+
+@media (max-width: 800px) {
+  .app {
+    display: block;
+  }
+
+  .side-menu {
+    position: static;
+    margin-bottom: 16px;
+  }
+}
