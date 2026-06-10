@@ -133,8 +133,7 @@ document.getElementById("brakett").value = "";
   document.getElementById("kommentar").value = "";
 }
 
-function slettVindu(index) {
-  function dupliserVindu(index) {
+function dupliserVindu(index) {
   const prosjekt = hentAktivtProsjekt();
   if (!prosjekt) return;
 
@@ -152,6 +151,8 @@ function slettVindu(index) {
   lagreProsjekter();
   visOversikt();
 }
+
+function slettVindu(index) {
   const prosjekt = hentAktivtProsjekt();
   if (!prosjekt) return;
 
