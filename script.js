@@ -134,6 +134,24 @@ document.getElementById("brakett").value = "";
 }
 
 function slettVindu(index) {
+  function dupliserVindu(index) {
+  const prosjekt = hentAktivtProsjekt();
+  if (!prosjekt) return;
+
+  const original = prosjekt.vinduer[index];
+  if (!original) return;
+
+  const kopi = {
+    ...original,
+    plassering: `${original.plassering} kopi`
+  };
+
+  prosjekt.vinduer.splice(index + 1, 0, kopi);
+  vinduer = prosjekt.vinduer;
+
+  lagreProsjekter();
+  visOversikt();
+}
   const prosjekt = hentAktivtProsjekt();
   if (!prosjekt) return;
 
