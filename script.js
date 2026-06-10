@@ -83,6 +83,7 @@ felt.forEach(id => {
 function lagreVindu() {
   const plassering = document.getElementById("plassering").value;
   const type = document.getElementById("type").value;
+  const motor = document.getElementById("motor").value;
   const bredde = document.getElementById("bredde").value;
   const hoyde = document.getElementById("hoyde").value;
  const kassefarge = document.getElementById("kassefarge").value;
@@ -90,10 +91,10 @@ const duk = document.getElementById("duk").value;
 const brakett = document.getElementById("brakett").value;
   const kommentar = document.getElementById("kommentar").value;
 
-  if (!plassering || !type || !bredde || !hoyde) {
-    alert("Fyll inn plassering, type, bredde og høyde.");
-    return;
-  }
+  if (!plassering || !type || !motor || !bredde || !hoyde) {
+  alert("Fyll inn plassering, type, motor, bredde og høyde.");
+  return;
+}
 const prosjekt = hentAktivtProsjekt();
 
 if (!prosjekt) {
@@ -126,6 +127,7 @@ if (harAndreVinduer) {
  const vindu = {
   plassering,
   type,
+  motor,
   bredde,
   hoyde,
   kassefarge,
@@ -147,6 +149,7 @@ lagreProsjekter();
 function tomVinduSkjema() {
   document.getElementById("plassering").value = "";
   document.getElementById("type").value = "";
+  document.getElementById("motor").value = "";
   document.getElementById("bredde").value = "";
   document.getElementById("hoyde").value = "";
   document.getElementById("kassefarge").value = "";
@@ -164,6 +167,7 @@ function redigerVindu(index) {
 
   document.getElementById("plassering").value = vindu.plassering || "";
   document.getElementById("type").value = vindu.type || "";
+  document.getElementById("motor").value = vindu.motor || "";
   document.getElementById("bredde").value = vindu.bredde || "";
   document.getElementById("hoyde").value = vindu.hoyde || "";
   document.getElementById("kassefarge").value = vindu.kassefarge || "";
@@ -246,6 +250,7 @@ function visOversikt() {
       <div class="vindu">
         <h3>Vindu ${index + 1}: ${vindu.plassering}</h3>
         <p><strong>Type:</strong> ${vindu.type}</p>
+        <p><strong>Motor:</strong> ${vindu.motor || "-"}</p>
         <p><strong>Mål:</strong> ${vindu.bredde} x ${vindu.hoyde} mm</p>
         <p><strong>Kassefarge:</strong> ${vindu.kassefarge || "-"}</p>
 <p><strong>Duk:</strong> ${vindu.duk || "-"}</p>
@@ -430,7 +435,7 @@ const kommentar = doc.splitTextToSize(detaljerTekst, 48);
 
       doc.setFont(undefined, "normal");
       doc.text(vindu.plassering || "-", 28, y + 6);
-      doc.text(vindu.type || "-", 65, y + 6);
+      doc.text(`${vindu.type || "-"} / ${vindu.motor || "-"}`, 65, y + 6);
       doc.text(`${vindu.bredde} x ${vindu.hoyde}`, 110, y + 6);
       doc.text(kommentar, 148, y + 6);
 
