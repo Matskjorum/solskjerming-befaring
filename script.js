@@ -1148,6 +1148,10 @@ html += `
     <button onclick="lagreTilbudspriser()">
       💾 Lagre tilbudspriser
     </button>
+    
+   <button onclick="eksporterTilbudsPDF()">
+  📄 Generer tilbud
+</button> 
   `;
 
   oversikt.innerHTML = html;
@@ -1188,5 +1192,236 @@ function velgStatus(status) {
 
   visProsjektListe();
   visOversikt();
+}
+function eksporterTilbudsPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF("p", "mm", "a4");
+
+  const prosjekt = hentAktivtProsjekt();
+  if (!prosjekt) {
+    alert("Ingen aktivt prosjekt.");
+    return;
+  }
+
+  const dato = new Date().toLocaleDateString("no-NO");
+  const navy = [0, 38, 84];
+  const green = [57, 169, 53];
+  const border = [180, 180, 180];
+
+  let produktSum = 0;
+  let montasjeSum = 0;
+  let styringSum = 0;
+
+  prosjekt.vinduer.forEach(v => {
+    produktSum += Number(v.pris || 0);
+    montasjeSum += Number(v.montasje || 0);
+  });
+
+  (prosjekt.styringer || []).forEach(s => {
+    styringSum += Number(s.antall || 0) * Number(s.pris || 0);
+  });
+
+  const tilleggSum =
+    Number(prosjekt.tillegg?.stillas || 0) +
+    Number(prosjekt.tillegg?.lift || 0) +
+    Number(prosjekt.tillegg?.elektro || 0) +
+    Number(prosjekt.tillegg?.frakt || 0) +
+    Number(prosjekt.tillegg?.annet || 0);
+
+  const sumEks = produktSum + montasjeSum + styringSum + tilleggSum;
+  const mva = sumEks * 0.25;
+  const total = sumEks + mva;
+
+  function penger(tall) {
+    return `${Number(tall || 0).toLocaleString("no-NO")} kr`;
+  }
+
+  let y = 15;
+
+  doc.setTextColor(...navy);
+  doc.setFontSize(22);
+  doc.setFont(undefined, "bold");
+  doc.text("INNLANDET SOLSKJERMING", 15, y);
+
+  y += 10;
+  doc.setFontSize(18);
+  doc.text("TILBUD", 15, y);
+
+  doc.setFontSize(10);
+  doc.setTextColor(0, 0, 0);
+  doc.setFont(undefined, "normal");
+  doc.text(`Dato: ${dato}`, 150, 15);
+  doc.text(`Prosjekt: ${prosjekt.prosjektNr || "-"}`, 150, 22);
+
+  y += 8;
+  doc.setDrawColor(...green);
+  doc.setLineWidth(1);
+  doc.line(15, y, 195, y);
+
+  y += 12;
+
+  doc.setFontSize(11);
+  doc.text(`Til: ${prosjekt.kundeNavn || "-"}`, 15, y);
+  y += 6;
+  doc.text(`Adresse: ${prosjekt.adresse || "-"}, ${prosjekt.poststed || "-"}`, 15, y);
+  y += 6;
+  doc.text(`Telefon: ${prosjekt.telefon || "-"}`, 15, y);
+  y += 6;
+  doc.text(`E-post: ${prosjekt.epost || "-"}`, 15, y);
+
+  y += 12;
+
+  const intro = doc.splitTextToSize(
+    "Takk for hyggelig befaring og muligheten til å gi tilbud på solskjerming. Under følger vårt tilbud basert på registrerte mål og valgte løsninger.",
+    180
+  );
+
+  doc.text(intro, 15, y);
+  y += intro.length * 6 + 8;
+
+  doc.setFont(undefined, "bold");
+  doc.setTextColor(...navy);
+  doc.text("Produkter og montasje", 15, y);
+  y += 7;
+
+  doc.setFillColor(...navy);
+  doc.rect(15, y, 180, 8, "F");
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(8);
+  doc.text("Beskrivelse", 18, y + 5.5);
+  doc.text("Produkt", 135, y + 5.5);
+  doc.text("Montasje", 168, y + 5.5);
+
+  y += 8;
+
+  prosjekt.vinduer.forEach((v, index) => {
+    if (y > 255) {
+      doc.addPage();
+      y = 20;
+    }
+
+    const beskrivelse = doc.splitTextToSize(
+      `Vindu ${index + 1}: ${v.plassering || "-"} - ${v.type || "-"} / ${v.motor || "-"} - ${v.bredde} x ${v.hoyde} mm`,
+      110
+    );
+
+    const rowHeight = Math.max(10, beskrivelse.length * 5 + 4);
+
+    doc.setDrawColor(...border);
+    doc.rect(15, y, 180, rowHeight);
+    doc.line(130, y, 130, y + rowHeight);
+    doc.line(165, y, 165, y + rowHeight);
+
+    doc.setTextColor(0, 0, 0);
+    doc.setFont(undefined, "normal");
+    doc.setFontSize(8);
+    doc.text(beskrivelse, 18, y + 5);
+    doc.text(penger(v.pris), 160, y + 5, { align: "right" });
+    doc.text(penger(v.montasje), 192, y + 5, { align: "right" });
+
+    y += rowHeight;
+  });
+
+  y += 10;
+
+  if ((prosjekt.styringer || []).length > 0) {
+    doc.setFont(undefined, "bold");
+    doc.setTextColor(...navy);
+    doc.setFontSize(11);
+    doc.text("Fjernkontroller og styring", 15, y);
+    y += 7;
+
+    (prosjekt.styringer || []).forEach(s => {
+      if (y > 260) {
+        doc.addPage();
+        y = 20;
+      }
+
+      doc.setDrawColor(...border);
+      doc.rect(15, y, 180, 8);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont(undefined, "normal");
+      doc.setFontSize(8);
+
+      doc.text(`${s.type || "-"} (${s.antall || 1} stk)`, 18, y + 5.5);
+      doc.text(penger(Number(s.antall || 0) * Number(s.pris || 0)), 192, y + 5.5, { align: "right" });
+
+      y += 8;
+    });
+
+    y += 8;
+  }
+
+  doc.setFont(undefined, "bold");
+  doc.setTextColor(...navy);
+  doc.setFontSize(11);
+  doc.text("Summering", 15, y);
+  y += 7;
+
+  const summering = [
+    ["Produkter", produktSum],
+    ["Montasje", montasjeSum],
+    ["Styring", styringSum],
+    ["Tillegg", tilleggSum],
+    ["Sum eks. mva", sumEks],
+    ["MVA 25%", mva],
+    ["Total inkl. mva", total]
+  ];
+
+  summering.forEach((rad, index) => {
+    doc.setDrawColor(...border);
+
+    if (index === 6) {
+      doc.setFillColor(230, 240, 250);
+      doc.rect(15, y, 180, 9, "F");
+    }
+
+    doc.rect(15, y, 180, 9);
+    doc.line(130, y, 130, y + 9);
+
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(index >= 4 ? 10 : 9);
+    doc.setFont(undefined, index >= 4 ? "bold" : "normal");
+
+    doc.text(rad[0], 18, y + 6);
+    doc.text(penger(rad[1]), 192, y + 6, { align: "right" });
+
+    y += 9;
+  });
+
+  y += 12;
+
+  const vilkar = [
+    "Tilbudet er gyldig i 30 dager.",
+    "Leveringstid avklares ved bestilling.",
+    "Tilbudet er basert på oppmåling og informasjon registrert ved befaring.",
+    "Eventuelle tillegg eller endringer avtales skriftlig.",
+    "Med forbehold om skrivefeil og prisendringer fra leverandør."
+  ];
+
+  doc.setFont(undefined, "bold");
+  doc.setTextColor(...navy);
+  doc.text("Forbehold og betingelser", 15, y);
+  y += 7;
+
+  doc.setFont(undefined, "normal");
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(8);
+
+  vilkar.forEach(v => {
+    doc.text(`• ${v}`, 18, y);
+    y += 5;
+  });
+
+  y += 10;
+  doc.setFontSize(10);
+  doc.text("Med vennlig hilsen", 15, y);
+  y += 7;
+  doc.setFont(undefined, "bold");
+  doc.text("Innlandet Solskjerming", 15, y);
+
+  const filnavn = `tilbud-${prosjekt.prosjektNr || "prosjekt"}.pdf`;
+  doc.save(filnavn);
 }
 lastAktivtProsjekt();
