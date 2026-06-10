@@ -242,7 +242,11 @@ function visOversikt() {
     <p><strong>Telefon:</strong> ${telefon || "-"}</p>
     <p><strong>E-post:</strong> ${epost || "-"}</p>
   `;
-
+html += `
+  <button onclick="endreProsjektStatus('tilbud')">
+    💰 Opprett tilbud
+  </button>
+`;
   if (vinduer.length === 0) {
     html += `<p class="small">Ingen vinduer lagt inn ennå.</p>`;
   }
@@ -641,7 +645,8 @@ function visProsjektListe() {
 
   let html = "";
 
-  prosjekter.forEach(p => {
+  const filtrerteProsjekter = prosjekter.filter(p => (p.status || "befaring") === aktivStatus);
+  filtrerteProsjekter.forEach(p => {
     const aktiv = p.id === aktivtProsjektId ? "aktivt-prosjekt" : "";
 
     html += `
@@ -935,5 +940,21 @@ function eksporterFabrikkPDF() {
 
   const filnavn = `fabrikkbestilling-${prosjekt.prosjektNr || "prosjekt"}.pdf`;
   doc.save(filnavn);
+}
+  function endreProsjektStatus(nyStatus) {
+  const prosjekt = hentAktivtProsjekt();
+  if (!prosjekt) return;
+
+  prosjekt.status = nyStatus;
+  lagreProsjekter();
+  visProsjektListe();
+  visOversikt();
+
+  alert("Prosjektstatus er oppdatert.");
+}
+function velgStatus(status) {
+  aktivStatus = status;
+  localStorage.setItem("aktivStatus", aktivStatus);
+  visProsjektListe();
 }
 lastAktivtProsjekt();
