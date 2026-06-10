@@ -88,6 +88,8 @@ function lagreVindu() {
   const motor = document.getElementById("motor").value;
   const bredde = document.getElementById("bredde").value;
   const hoyde = document.getElementById("hoyde").value;
+  const pris = document.getElementById("pris").value;
+const montasje = document.getElementById("montasje").value;
  const kassefarge = document.getElementById("kassefarge").value;
 const duk = document.getElementById("duk").value;
 const brakett = document.getElementById("brakett").value;
@@ -135,6 +137,8 @@ if (harAndreVinduer) {
   kassefarge,
   duk,
   brakett,
+   pris,
+  montasje,
   kommentar
 };
 
@@ -157,6 +161,8 @@ function tomVinduSkjema() {
   document.getElementById("kassefarge").value = "";
 document.getElementById("duk").value = "";
 document.getElementById("brakett").value = "";
+  document.getElementById("pris").value = "";
+document.getElementById("montasje").value = "";
   document.getElementById("kommentar").value = "";
 }
 
@@ -175,6 +181,8 @@ function redigerVindu(index) {
   document.getElementById("kassefarge").value = vindu.kassefarge || "";
   document.getElementById("duk").value = vindu.duk || "";
   document.getElementById("brakett").value = vindu.brakett || "";
+  document.getElementById("pris").value = vindu.pris || "";
+document.getElementById("montasje").value = vindu.montasje || "";
   document.getElementById("kommentar").value = vindu.kommentar || "";
 
   prosjekt.vinduer.splice(index, 1);
@@ -258,6 +266,8 @@ html += `
         <p><strong>Type:</strong> ${vindu.type}</p>
         <p><strong>Motor:</strong> ${vindu.motor || "-"}</p>
         <p><strong>Mål:</strong> ${vindu.bredde} x ${vindu.hoyde} mm</p>
+        <p><strong>Produktpris:</strong> ${vindu.pris || "0"} kr eks. mva</p>
+<p><strong>Montasje:</strong> ${vindu.montasje || "0"} kr eks. mva</p>
         <p><strong>Kassefarge:</strong> ${vindu.kassefarge || "-"}</p>
 <p><strong>Duk:</strong> ${vindu.duk || "-"}</p>
 <p><strong>Brakett:</strong> ${vindu.brakett || "-"}</p>
