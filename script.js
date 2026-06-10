@@ -969,7 +969,6 @@ function eksporterFabrikkPDF() {
 }
 function visTilbud() {
   const oversikt = document.getElementById("oversikt");
-
   const prosjekt = hentAktivtProsjekt();
 
   if (!prosjekt) {
@@ -986,30 +985,52 @@ function visTilbud() {
   prosjekt.vinduer.forEach((vindu, index) => {
     html += `
       <div class="vindu">
-        <h3>${vindu.plassering}</h3>
-
-        <p>${vindu.type}</p>
-
-        <p>
-          ${vindu.bredde} x ${vindu.hoyde} mm
-        </p>
+        <h3>Vindu ${index + 1}: ${vindu.plassering}</h3>
+        <p><strong>Type:</strong> ${vindu.type || "-"}</p>
+        <p><strong>Motor:</strong> ${vindu.motor || "-"}</p>
+        <p><strong>Mål:</strong> ${vindu.bredde} x ${vindu.hoyde} mm</p>
 
         <input
+          id="tilbudPris_${index}"
           type="number"
-          placeholder="Produktpris"
+          placeholder="Produktpris eks. mva"
           value="${vindu.pris || ""}"
         >
 
         <input
+          id="tilbudMontasje_${index}"
           type="number"
-          placeholder="Montasje"
+          placeholder="Montasjepris eks. mva"
           value="${vindu.montasje || ""}"
         >
       </div>
     `;
   });
 
+  html += `
+    <button onclick="lagreTilbudspriser()">
+      💾 Lagre tilbudspriser
+    </button>
+  `;
+
   oversikt.innerHTML = html;
+}
+function lagreTilbudspriser() {
+  const prosjekt = hentAktivtProsjekt();
+  if (!prosjekt) return;
+
+  prosjekt.vinduer.forEach((vindu, index) => {
+    const prisFelt = document.getElementById(`tilbudPris_${index}`);
+    const montasjeFelt = document.getElementById(`tilbudMontasje_${index}`);
+
+    vindu.pris = prisFelt ? prisFelt.value : "";
+    vindu.montasje = montasjeFelt ? montasjeFelt.value : "";
+  });
+
+  lagreProsjekter();
+
+  alert("Tilbudspriser er lagret.");
+  visTilbud();
 }
 function velgStatus(status) {
   aktivStatus = status;
