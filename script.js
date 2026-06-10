@@ -1238,14 +1238,21 @@ function eksporterTilbudsPDF() {
 
   let y = 15;
 
+try {
+  doc.addImage("logo.png.png", "PNG", 15, 10, 55, 22);
+} catch (e) {
   doc.setTextColor(...navy);
-  doc.setFontSize(22);
+  doc.setFontSize(18);
   doc.setFont(undefined, "bold");
   doc.text("INNLANDET SOLSKJERMING", 15, y);
+}
 
-  y += 10;
-  doc.setFontSize(18);
-  doc.text("TILBUD", 15, y);
+doc.setTextColor(...navy);
+doc.setFontSize(20);
+doc.setFont(undefined, "bold");
+doc.text("TILBUD", 15, 42);
+
+y = 50;
 
   doc.setFontSize(10);
   doc.setTextColor(0, 0, 0);
