@@ -760,4 +760,178 @@ function visStyringer() {
 
   container.innerHTML = html;
 }
+function eksporterFabrikkPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF("l", "mm", "a4");
+
+  const prosjekt = hentAktivtProsjekt();
+  if (!prosjekt) {
+    alert("Ingen aktivt prosjekt.");
+    return;
+  }
+
+  const dato = new Date().toLocaleDateString("no-NO");
+
+  const navy = [0, 38, 84];
+  const green = [57, 169, 53];
+  const border = [180, 180, 180];
+
+  doc.setTextColor(...navy);
+  doc.setFontSize(22);
+  doc.setFont(undefined, "bold");
+  doc.text("FABRIKKBESTILLING", 14, 18);
+
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(10);
+  doc.setFont(undefined, "normal");
+  doc.text(`Prosjekt: ${prosjekt.prosjektNr || "-"}`, 14, 28);
+  doc.text(`Kunde: ${prosjekt.kundeNavn || "-"}`, 14, 34);
+  doc.text(`Adresse: ${prosjekt.adresse || "-"}, ${prosjekt.poststed || "-"}`, 14, 40);
+  doc.text(`Dato: ${dato}`, 245, 28);
+
+  doc.setDrawColor(...green);
+  doc.setLineWidth(1);
+  doc.line(14, 46, 283, 46);
+
+  let y = 55;
+
+  const headers = [
+    "Nr",
+    "Plassering",
+    "Type",
+    "Motor",
+    "Bredde",
+    "Høyde",
+    "Kasse",
+    "Duk",
+    "Brakett",
+    "Kommentar"
+  ];
+
+  const widths = [10, 35, 38, 18, 20, 20, 35, 50, 22, 55];
+  let x = 14;
+
+  doc.setFillColor(...navy);
+  doc.rect(14, y, 269, 9, "F");
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(8);
+  doc.setFont(undefined, "bold");
+
+  headers.forEach((h, i) => {
+    doc.text(h, x + 2, y + 6);
+    x += widths[i];
+  });
+
+  y += 9;
+
+  doc.setTextColor(0, 0, 0);
+  doc.setFont(undefined, "normal");
+
+  if (!prosjekt.vinduer || prosjekt.vinduer.length === 0) {
+    doc.text("Ingen vinduer registrert.", 14, y + 8);
+  } else {
+    prosjekt.vinduer.forEach((vindu, index) => {
+      if (y > 185) {
+        doc.addPage();
+        y = 18;
+      }
+
+      const row = [
+        String(index + 1),
+        vindu.plassering || "-",
+        vindu.type || "-",
+        vindu.motor || "-",
+        vindu.bredde || "-",
+        vindu.hoyde || "-",
+        vindu.kassefarge || "-",
+        vindu.duk || "-",
+        vindu.brakett || "-",
+        vindu.kommentar || "-"
+      ];
+
+      const wrapped = row.map((text, i) =>
+        doc.splitTextToSize(String(text), widths[i] - 4)
+      );
+
+      const rowHeight = Math.max(...wrapped.map(lines => lines.length)) * 4 + 5;
+
+      x = 14;
+
+      doc.setDrawColor(...border);
+      doc.rect(14, y, 269, rowHeight);
+
+      row.forEach((text, i) => {
+        if (i > 0) {
+          const lineX = 14 + widths.slice(0, i).reduce((a, b) => a + b, 0);
+          doc.line(lineX, y, lineX, y + rowHeight);
+        }
+
+        doc.setFontSize(7.5);
+        doc.text(wrapped[i], x + 2, y + 5);
+        x += widths[i];
+      });
+
+      y += rowHeight;
+    });
+  }
+
+  y += 10;
+
+  if (y > 170) {
+    doc.addPage();
+    y = 18;
+  }
+
+  doc.setTextColor(...navy);
+  doc.setFontSize(13);
+  doc.setFont(undefined, "bold");
+  doc.text("FJERNKONTROLLER OG STYRING", 14, y);
+
+  y += 6;
+
+  doc.setFillColor(...navy);
+  doc.rect(14, y, 100, 8, "F");
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(8);
+  doc.text("Produkt", 16, y + 5.5);
+  doc.text("Antall", 95, y + 5.5);
+
+  y += 8;
+
+  const styringer = prosjekt.styringer || [];
+
+  if (styringer.length === 0) {
+    doc.setTextColor(0, 0, 0);
+    doc.setFont(undefined, "normal");
+    doc.text("Ingen styringer registrert.", 16, y + 6);
+  } else {
+    styringer.forEach(s => {
+      doc.setDrawColor(...border);
+      doc.rect(14, y, 100, 8);
+      doc.line(90, y, 90, y + 8);
+
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(8);
+      doc.setFont(undefined, "normal");
+      doc.text(s.type || "-", 16, y + 5.5);
+      doc.text(`${s.antall || 1} stk`, 95, y + 5.5);
+
+      y += 8;
+    });
+  }
+
+  const pageCount = doc.internal.getNumberOfPages();
+
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Side ${i} av ${pageCount}`, 260, 200);
+  }
+
+  const filnavn = `fabrikkbestilling-${prosjekt.prosjektNr || "prosjekt"}.pdf`;
+  doc.save(filnavn);
+}
 lastAktivtProsjekt();
