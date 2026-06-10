@@ -349,3 +349,34 @@ button.secondary {
     margin-bottom: 16px;
   }
 }
+details.card summary {
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 12px;
+  color: #002654;
+  border-bottom: 1px solid #ddd;
+}
+
+details.card[open] summary {
+  background: #f5f8fc;
+}
+
+details.card {
+  overflow: hidden;
+}
+
+details.card summary::-webkit-details-marker {
+  display: none;
+}
+
+details.card summary::after {
+  content: "+";
+  float: right;
+  color: #39a935;
+  font-size: 20px;
+}
+
+details.card[open] summary::after {
+  content: "−";
+}
