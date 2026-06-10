@@ -2,6 +2,7 @@ let prosjekter = JSON.parse(localStorage.getItem("prosjekter")) || [];
 let aktivtProsjektId = localStorage.getItem("aktivtProsjektId");
 
 let vinduer = [];
+let aktivStatus = localStorage.getItem("aktivStatus") || "befaring";
 let styringer = [];
 
 function lagProsjektNummer() {
@@ -19,7 +20,8 @@ function nyttProsjekt() {
     poststed: "",
     telefon: "",
     epost: "",
-    vinduer: [],
+status: "befaring",
+vinduer: [],
 styringer: []
   };
 
