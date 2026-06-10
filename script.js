@@ -1163,7 +1163,18 @@ function lagreTilbudspriser() {
     vindu.pris = prisFelt ? prisFelt.value : "";
     vindu.montasje = montasjeFelt ? montasjeFelt.value : "";
   });
+(prosjekt.styringer || []).forEach((s, index) => {
+  const felt = document.getElementById(`styringPris_${index}`);
+  s.pris = felt ? felt.value : "";
+});
 
+prosjekt.tillegg = {
+  stillas: document.getElementById("tillegg_stillas")?.value || "",
+  lift: document.getElementById("tillegg_lift")?.value || "",
+  elektro: document.getElementById("tillegg_elektro")?.value || "",
+  frakt: document.getElementById("tillegg_frakt")?.value || "",
+  annet: document.getElementById("tillegg_annet")?.value || ""
+};
   lagreProsjekter();
 
   alert("Tilbudspriser er lagret.");
