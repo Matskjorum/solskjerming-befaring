@@ -3,6 +3,7 @@ let aktivtProsjektId = localStorage.getItem("aktivtProsjektId");
 
 let vinduer = [];
 let aktivStatus = localStorage.getItem("aktivStatus") || "befaring";
+let aktivVisning = "befaring";
 let styringer = [];
 
 function lagProsjektNummer() {
@@ -236,6 +237,10 @@ function slettProsjekt() {
 
  
 function visOversikt() {
+  if (aktivVisning === "tilbud") {
+  visTilbud();
+  return;
+}
   const oversikt = document.getElementById("oversikt");
 
   const kundeNavn = document.getElementById("kundeNavn").value;
@@ -962,9 +967,57 @@ function eksporterFabrikkPDF() {
 
   alert("Prosjektstatus er oppdatert.");
 }
+function visTilbud() {
+  const oversikt = document.getElementById("oversikt");
+
+  const prosjekt = hentAktivtProsjekt();
+
+  if (!prosjekt) {
+    oversikt.innerHTML = "";
+    return;
+  }
+
+  let html = `
+    <h2>💰 Tilbud</h2>
+    <p><strong>Prosjekt:</strong> ${prosjekt.prosjektNr}</p>
+    <p><strong>Kunde:</strong> ${prosjekt.kundeNavn || "-"}</p>
+  `;
+
+  prosjekt.vinduer.forEach((vindu, index) => {
+    html += `
+      <div class="vindu">
+        <h3>${vindu.plassering}</h3>
+
+        <p>${vindu.type}</p>
+
+        <p>
+          ${vindu.bredde} x ${vindu.hoyde} mm
+        </p>
+
+        <input
+          type="number"
+          placeholder="Produktpris"
+          value="${vindu.pris || ""}"
+        >
+
+        <input
+          type="number"
+          placeholder="Montasje"
+          value="${vindu.montasje || ""}"
+        >
+      </div>
+    `;
+  });
+
+  oversikt.innerHTML = html;
+}
 function velgStatus(status) {
   aktivStatus = status;
+  aktivVisning = status;
+
   localStorage.setItem("aktivStatus", aktivStatus);
+
   visProsjektListe();
+  visOversikt();
 }
 lastAktivtProsjekt();
