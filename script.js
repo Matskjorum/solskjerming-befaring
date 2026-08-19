@@ -90,12 +90,13 @@ async function lagreProsjektTilSupabase() {
     const { error } = await supabaseClient
       .from("Prosjekter")
       .update(prosjektData)
-          .eq("id", prosjekt.supabaseId);
+      .eq("id", prosjekt.supabaseId);
 
     if (error) {
       console.error("Feil ved oppdatering:", error);
       return;
     }
+
   } else {
     const { data, error } = await supabaseClient
       .from("Prosjekter")
@@ -111,25 +112,19 @@ async function lagreProsjektTilSupabase() {
     }
 
     if (data && data.length > 0) {
-  prosjekt.supabaseId = data[0].id;
+      prosjekt.supabaseId = data[0].id;
+    }
+  }
 
   localStorage.setItem(
     "prosjekter",
     JSON.stringify(prosjekter)
   );
-}
 
-      localStorage.setItem(
-        "prosjekter",
-        JSON.stringify(prosjekter)
-      );
-
-      localStorage.setItem(
-        "aktivtProsjektId",
-        aktivtProsjektId
-      );
-    }
-  }
+  localStorage.setItem(
+    "aktivtProsjektId",
+    aktivtProsjektId || ""
+  );
 }
 async function hentProsjekterFraSupabase() {
   const { data, error } = await supabaseClient
