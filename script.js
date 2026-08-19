@@ -192,11 +192,12 @@ async function sjekkInnlogging() {
     data: { session }
   } = await supabaseClient.auth.getSession();
 
-  if (session) {
-    visApp();
-  } else {
-    visLogin();
-  }
+if (session) {
+  visApp();
+  await hentProsjekterFraSupabase();
+} else {
+  visLogin();
+}
 }
 
 const felt = [
