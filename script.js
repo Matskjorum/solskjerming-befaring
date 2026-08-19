@@ -60,22 +60,7 @@ function lagreProsjekter() {
 async function lagreProsjektTilSupabase() {
   const prosjekt = hentAktivtProsjekt();
   if (!prosjekt) return;
-  async function hentProsjekterFraSupabase() {
-  const { data, error } = await supabaseClient
-    .from("Prosjekter")
-    .select("*")
-    .order("created_at", { ascending: false });
 
-  if (error) {
-    console.error(error);
-    alert("Kunne ikke hente prosjekter fra skyen.");
-    return;
-  }
-
-  console.log("Prosjekter fra Supabase:", data);
-
-  alert(`Fant ${data.length} prosjekt(er) i skyen.`);
-}
 
   const {
     data: { user }
@@ -111,6 +96,21 @@ async function lagreProsjektTilSupabase() {
 
   console.log("Lagret i Supabase:", data);
   alert("Prosjektet er lagret i skyen!");
+}
+async function hentProsjekterFraSupabase() {
+  const { data, error } = await supabaseClient
+    .from("Prosjekter")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error(error);
+    alert("Kunne ikke hente prosjekter fra skyen.");
+    return;
+  }
+
+  console.log("Prosjekter fra Supabase:", data);
+  alert(`Fant ${data.length} prosjekt(er) i skyen.`);
 }
 
 function velgProsjekt(id) {
