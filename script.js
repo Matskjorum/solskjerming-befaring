@@ -106,14 +106,15 @@ async function lagreProsjektTilSupabase() {
       })
       .select();
 
-    if (error) {
-      console.error("Feil ved opprettelse:", error);
-      return;
-    }
-
+ if (error) {
+  console.error("Feil ved opprettelse:", error);
+  alert("FEIL VED LAGRING:\n" + error.message);
+  return;
+}
     if (data && data.length > 0) {
       prosjekt.supabaseId = data[0].id;
     }
+    alert("Prosjektet er lagret i skyen! ID: " + prosjekt.supabaseId);
   }
 
   localStorage.setItem(
