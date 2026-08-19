@@ -109,8 +109,35 @@ async function hentProsjekterFraSupabase() {
     return;
   }
 
-  console.log("Prosjekter fra Supabase:", data);
-  alert(`Fant ${data.length} prosjekt(er) i skyen.`);
+  prosjekter = data.map(p => ({
+    id: String(p.id),
+    prosjektNr: p.prosjekt_nr || "",
+    kundeNavn: p.kundenavn || "",
+    adresse: p.adresse || "",
+    poststed: p.poststed || "",
+    telefon: p.telefon || "",
+    epost: p.epost || "",
+    vinduer: p.vinduer || [],
+    styringer: p.styringer || [],
+    tillegg: p.tillegg || {},
+    status: p.status || "befaring",
+    opprettetAv: p.opprettet_av || "",
+    createdAt: p.created_at || "",
+    updatedAt: p.updated_at || ""
+  }));
+
+  if (prosjekter.length > 0) {
+    aktivtProsjektId = prosjekter[0].id;
+    vinduer = prosjekter[0].vinduer || [];
+  } else {
+    aktivtProsjektId = "";
+    vinduer = [];
+  }
+
+  visProsjektListe();
+  lastAktivtProsjekt();
+
+  alert(`Fant ${prosjekter.length} prosjekt(er) i skyen.`);
 }
 
 function velgProsjekt(id) {
