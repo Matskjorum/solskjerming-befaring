@@ -1,3 +1,10 @@
+const SUPABASE_URL = "https://dztuqcbgdxdjupeldpdd.supabase.co";
+const SUPABASE_KEY = "sb_publishable_VE7ILmv2yqDPsi6wHF_6iw_Ab_O_jLe";
+
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 let prosjekter = JSON.parse(localStorage.getItem("prosjekter")) || [];
 let aktivtProsjektId = localStorage.getItem("aktivtProsjektId");
 
@@ -68,6 +75,46 @@ function slettValgtProsjekt(id) {
 
   lagreProsjekter();
   lastAktivtProsjekt();
+}
+async function loggInn() {
+  const epost = document.getElementById("loginEpost").value;
+  const passord = document.getElementById("loginPassord").value;
+  const feil = document.getElementById("loginFeil");
+
+  feil.textContent = "";
+
+  const { data, error } =
+    await supabaseClient.auth.signInWithPassword({
+      email: epost,
+      password: passord
+    });
+
+  if (error) {
+    feil.textContent = "Feil e-post eller passord.";
+    return;
+  }
+
+  visApp();
+}
+function visApp() {
+  document.getElementById("loginBoks").style.display = "none";
+  document.getElementById("appInnhold").style.display = "block";
+}
+
+function visLogin() {
+  document.getElementById("loginBoks").style.display = "block";
+  document.getElementById("appInnhold").style.display = "none";
+}
+async function sjekkInnlogging() {
+  const {
+    data: { session }
+  } = await supabaseClient.auth.getSession();
+
+  if (session) {
+    visApp();
+  } else {
+    visLogin();
+  }
 }
 
 const felt = [
@@ -1431,4 +1478,5 @@ y = 50;
   const filnavn = `tilbud-${prosjekt.prosjektNr || "prosjekt"}.pdf`;
   doc.save(filnavn);
 }
+sjekkInnlogging();
 lastAktivtProsjekt();
