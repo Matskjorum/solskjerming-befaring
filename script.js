@@ -57,6 +57,45 @@ function lagreProsjekter() {
   localStorage.setItem("prosjekter", JSON.stringify(prosjekter));
   localStorage.setItem("aktivtProsjektId", aktivtProsjektId || "");
 }
+async function lagreProsjektTilSupabase() {
+  const prosjekt = hentAktivtProsjekt();
+  if (!prosjekt) return;
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+    alert("Du må være innlogget.");
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from("Prosjekter")
+    .insert({
+      kundenavn: prosjekt.kundeNavn || "",
+      adresse: prosjekt.adresse || "",
+      poststed: prosjekt.poststed || "",
+      telefon: prosjekt.telefon || "",
+      epost: prosjekt.epost || "",
+      vinduer: prosjekt.vinduer || [],
+      styringer: prosjekt.styringer || [],
+      tillegg: prosjekt.tillegg || {},
+      status: prosjekt.status || "",
+      opprettet_av: user.id,
+      updated_at: new Date().toISOString()
+    })
+    .select();
+
+  if (error) {
+    console.error(error);
+    alert("Kunne ikke lagre prosjektet i skyen.");
+    return;
+  }
+
+  console.log("Lagret i Supabase:", data);
+  alert("Prosjektet er lagret i skyen!");
+}
 
 function velgProsjekt(id) {
   aktivtProsjektId = id;
