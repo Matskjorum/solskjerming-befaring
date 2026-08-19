@@ -84,13 +84,13 @@ async function lagreProsjektTilSupabase() {
     updated_at: new Date().toISOString()
   };
 
-  const erSkyProsjekt = /^\d+$/.test(String(prosjekt.id));
+  const erSkyProsjekt = !!prosjekt.supabaseId;
 
   if (erSkyProsjekt) {
     const { error } = await supabaseClient
       .from("Prosjekter")
       .update(prosjektData)
-      .eq("id", Number(prosjekt.id));
+          .eq("id", prosjekt.supabaseId);
 
     if (error) {
       console.error("Feil ved oppdatering:", error);
@@ -111,14 +111,13 @@ async function lagreProsjektTilSupabase() {
     }
 
     if (data && data.length > 0) {
-      const gammelId = prosjekt.id;
-      const nyId = String(data[0].id);
+  prosjekt.supabaseId = data[0].id;
 
-      prosjekt.id = nyId;
-
-      if (aktivtProsjektId === gammelId) {
-        aktivtProsjektId = nyId;
-      }
+  localStorage.setItem(
+    "prosjekter",
+    JSON.stringify(prosjekter)
+  );
+}
 
       localStorage.setItem(
         "prosjekter",
@@ -146,6 +145,7 @@ async function hentProsjekterFraSupabase() {
 
   prosjekter = data.map(p => ({
     id: String(p.id),
+    supabaseId: p.id,
     prosjektNr: p.prosjekt_nr || "",
     kundeNavn: p.kundenavn || "",
     adresse: p.adresse || "",
