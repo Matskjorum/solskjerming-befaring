@@ -7,6 +7,31 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div id="loginBoks" class="login-boks">
+  <img src="logo.png.png" alt="Innlandet Solskjerming" class="login-logo">
+
+  <h2>Logg inn</h2>
+
+  <input
+    id="loginEpost"
+    type="email"
+    placeholder="E-post"
+  >
+
+  <input
+    id="loginPassord"
+    type="password"
+    placeholder="Passord"
+  >
+
+  <button onclick="loggInn()">
+    Logg inn
+  </button>
+
+  <p id="loginFeil"></p>
+</div>
+
+<div id="appInnhold" style="display:none;">
   <div class="app">
     <nav class="side-menu">
   <button onclick="velgStatus('befaring')">📋 Befaringer</button>
@@ -240,6 +265,8 @@
   </main>
   </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
 </body>
+ 
 </html>
