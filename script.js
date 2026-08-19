@@ -61,41 +61,76 @@ async function lagreProsjektTilSupabase() {
   const prosjekt = hentAktivtProsjekt();
   if (!prosjekt) return;
 
-
   const {
     data: { user }
   } = await supabaseClient.auth.getUser();
 
   if (!user) {
-    alert("Du må være innlogget.");
+    console.error("Ingen innlogget bruker.");
     return;
   }
 
-  const { data, error } = await supabaseClient
-    .from("Prosjekter")
-    .insert({
-      kundenavn: prosjekt.kundeNavn || "",
-      adresse: prosjekt.adresse || "",
-      poststed: prosjekt.poststed || "",
-      telefon: prosjekt.telefon || "",
-      epost: prosjekt.epost || "",
-      vinduer: prosjekt.vinduer || [],
-      styringer: prosjekt.styringer || [],
-      tillegg: prosjekt.tillegg || {},
-      status: prosjekt.status || "",
-      opprettet_av: user.id,
-      updated_at: new Date().toISOString()
-    })
-    .select();
+  const prosjektData = {
+    prosjekt_nr: prosjekt.prosjektNr || "",
+    kundenavn: prosjekt.kundeNavn || "",
+    adresse: prosjekt.adresse || "",
+    poststed: prosjekt.poststed || "",
+    telefon: prosjekt.telefon || "",
+    epost: prosjekt.epost || "",
+    vinduer: prosjekt.vinduer || [],
+    styringer: prosjekt.styringer || [],
+    tillegg: prosjekt.tillegg || {},
+    status: prosjekt.status || "befaring",
+    updated_at: new Date().toISOString()
+  };
 
-  if (error) {
-    console.error(error);
-    alert("Kunne ikke lagre prosjektet i skyen.");
-    return;
+  const erSkyProsjekt = /^\d+$/.test(String(prosjekt.id));
+
+  if (erSkyProsjekt) {
+    const { error } = await supabaseClient
+      .from("Prosjekter")
+      .update(prosjektData)
+      .eq("id", Number(prosjekt.id));
+
+    if (error) {
+      console.error("Feil ved oppdatering:", error);
+      return;
+    }
+  } else {
+    const { data, error } = await supabaseClient
+      .from("Prosjekter")
+      .insert({
+        ...prosjektData,
+        opprettet_av: user.id
+      })
+      .select();
+
+    if (error) {
+      console.error("Feil ved opprettelse:", error);
+      return;
+    }
+
+    if (data && data.length > 0) {
+      const gammelId = prosjekt.id;
+      const nyId = String(data[0].id);
+
+      prosjekt.id = nyId;
+
+      if (aktivtProsjektId === gammelId) {
+        aktivtProsjektId = nyId;
+      }
+
+      localStorage.setItem(
+        "prosjekter",
+        JSON.stringify(prosjekter)
+      );
+
+      localStorage.setItem(
+        "aktivtProsjektId",
+        aktivtProsjektId
+      );
+    }
   }
-
-  console.log("Lagret i Supabase:", data);
-  alert("Prosjektet er lagret i skyen!");
 }
 async function hentProsjekterFraSupabase() {
   const { data, error } = await supabaseClient
