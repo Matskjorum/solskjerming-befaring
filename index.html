@@ -73,6 +73,18 @@
 
 <div id="prosjektArbeidsflate" style="display:none;">  
   <button class="secondary" onclick="tilbakeTilProsjekter()">← Tilbake til prosjekter</button>
+  <div class="card">
+  <h3>Status</h3>
+
+  <select id="prosjektStatus" onchange="endreProsjektStatus(this.value)">
+    <option value="befaring">Befaring</option>
+    <option value="befaring_ferdig">Befaring ferdig</option>
+    <option value="tilbud">Tilbud under arbeid</option>
+    <option value="sendt">Tilbud sendt</option>
+    <option value="akseptert">Akseptert</option>
+    <option value="avslatt">Ikke akseptert</option>
+  </select>
+</div>
     <details class="card" open>
   <summary>👤 Kundeinfo</summary>
 
