@@ -1035,9 +1035,10 @@ function leggTilStyring() {
   }
 
   prosjekt.styringer.push({
-    type,
-    antall
-  });
+  type,
+  antall,
+  pris: standardStyringspriser[type] ?? 0
+});
 
   lagreProsjekter();
 
