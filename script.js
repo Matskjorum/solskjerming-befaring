@@ -54,12 +54,16 @@ document.getElementById("prosjektArbeidsflate").style.display = "block";
 function hentAktivtProsjekt() {
   return prosjekter.find(p => p.id === aktivtProsjektId);
 }
-
+let lagreTimer = null;
 function lagreProsjekter() {
   localStorage.setItem("prosjekter", JSON.stringify(prosjekter));
   localStorage.setItem("aktivtProsjektId", aktivtProsjektId || "");
 
+  clearTimeout(lagreTimer);
+
+lagreTimer = setTimeout(() => {
   lagreProsjektTilSupabase();
+}, 800);
 }
 async function lagreProsjektTilSupabase() {
   const prosjekt = hentAktivtProsjekt();
