@@ -1349,7 +1349,7 @@ function visTilbud() {
           id="tilbudMontasje_${index}"
           type="number"
           placeholder="Montasjepris eks. mva"
-          value="${vindu.montasje || ""}"
+          value="${vindu.montasje || STANDARD_MONTASJE}"
         >
       </div>
     `;
