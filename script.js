@@ -47,6 +47,8 @@ styringer: []
 
   lagreProsjekter();
   lastAktivtProsjekt();
+  document.getElementById("prosjektForside").style.display = "none";
+document.getElementById("prosjektArbeidsflate").style.display = "block";
 }
 
 function hentAktivtProsjekt() {
@@ -188,10 +190,18 @@ async function hentProsjekterFraSupabase() {
 
 function velgProsjekt(id) {
   aktivtProsjektId = id;
+
   lagreProsjekter();
   lastAktivtProsjekt();
-}
 
+  document.getElementById("prosjektForside").style.display = "none";
+  document.getElementById("prosjektArbeidsflate").style.display = "block";
+}
+function tilbakeTilProsjekter() {
+  document.getElementById("prosjektArbeidsflate").style.display = "none";
+  document.getElementById("prosjektForside").style.display = "block";
+  visProsjektListe();
+}
 function slettValgtProsjekt(id) {
   if (!confirm("Er du sikker på at du vil slette dette prosjektet?")) return;
 
