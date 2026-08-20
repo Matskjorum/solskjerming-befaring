@@ -498,3 +498,72 @@ details.card[open] summary::after {
     width: 100%;
   }
 }
+/* PROSJEKTKORT */
+
+.prosjekt-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.prosjekt-nummer {
+  font-size: 17px;
+}
+
+.prosjekt-kunde {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.prosjekt-adresse {
+  font-size: 14px;
+  opacity: 0.75;
+}
+
+.status-badge {
+  display: inline-block;
+  width: fit-content;
+  margin-top: 6px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* Statusfarger */
+.status-befaring {
+  background: #e8f1ff;
+  color: #174ea6;
+}
+
+.status-befaring_ferdig {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-tilbud {
+  background: #fff4d6;
+  color: #8a5a00;
+}
+
+.status-sendt {
+  background: #eee8ff;
+  color: #5b35a5;
+}
+
+.status-akseptert {
+  background: #e5f7e8;
+  color: #17752a;
+}
+
+.status-avslatt {
+  background: #fdeaea;
+  color: #b3261e;
+}
+
+.prosjekt-endret {
+  margin-top: 4px;
+  font-size: 12px;
+  opacity: 0.6;
+}
