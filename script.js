@@ -208,7 +208,7 @@ function toggleMeny() {
 
   meny.classList.toggle("apen");
 }
-function endreProsjektStatus(status) {
+function endreProsjekt() {
   const prosjekt = hentAktivtProsjekt();
   if (!prosjekt) return;
 
@@ -1421,6 +1421,7 @@ function velgStatus(status) {
 
   visProsjektListe();
   visOversikt();
+  document.getElementById("sideMeny").classList.remove("apen");
 }
 function eksporterTilbudsPDF() {
   const { jsPDF } = window.jspdf;
