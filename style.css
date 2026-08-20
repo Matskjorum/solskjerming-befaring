@@ -463,18 +463,21 @@ details.card[open] summary::after {
 @media (min-width: 900px) {
 
   .app {
-    width: 100%;
-    max-width: none;
-    margin: 0;
-  }
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px 40px;
+  box-sizing: border-box;
+  display: block;
+}
 
   .main-content {
-    width: calc(100% - 120px);
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 24px;
-    box-sizing: border-box;
-  }
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+}
 
   .app-header {
     width: 100%;
