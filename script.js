@@ -233,17 +233,42 @@ function endreProsjekt() {
   lagreProsjekter();
   visProsjektListe();
 }
-function slettValgtProsjekt(id) {
+async function slettValgtProsjekt(id) {
   if (!confirm("Er du sikker på at du vil slette dette prosjektet?")) return;
 
+  const prosjekt = prosjekter.find(p => p.id === id);
+
+  if (!prosjekt) return;
+
+  // Slett fra Supabase først
+  if (prosjekt.supabaseId) {
+    const { error } = await supabaseClient
+      .from("Prosjekter")
+      .delete()
+      .eq("id", prosjekt.supabaseId);
+
+    if (error) {
+      console.error("Feil ved sletting fra skyen:", error);
+      alert("Prosjektet kunne ikke slettes fra skyen.");
+      return;
+    }
+  }
+
+  // Deretter lokalt
   prosjekter = prosjekter.filter(p => p.id !== id);
 
   if (aktivtProsjektId === id) {
     aktivtProsjektId = prosjekter.length ? prosjekter[0].id : "";
   }
 
-  lagreProsjekter();
-  lastAktivtProsjekt();
+  localStorage.setItem("prosjekter", JSON.stringify(prosjekter));
+  localStorage.setItem("aktivtProsjektId", aktivtProsjektId || "");
+
+  visProsjektListe();
+
+  if (prosjekter.length > 0) {
+    lastAktivtProsjekt();
+  }
 }
 async function loggInn() {
   const epost = document.getElementById("loginEpost").value;
