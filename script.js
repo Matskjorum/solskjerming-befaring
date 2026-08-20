@@ -63,6 +63,13 @@ async function lagreProsjektTilSupabase() {
   const prosjekt = hentAktivtProsjekt();
   if (!prosjekt) return;
 
+  const statusFelt = document.getElementById("lagreStatus");
+
+if (statusFelt) {
+  statusFelt.textContent = "Lagrer...";
+  statusFelt.className = "lagre-status lagrer";
+}
+
   const {
     data: { user }
   } = await supabaseClient.auth.getUser();
@@ -126,6 +133,10 @@ async function lagreProsjektTilSupabase() {
     "aktivtProsjektId",
     aktivtProsjektId || ""
   );
+    if (statusFelt) {
+  statusFelt.textContent = "Lagret i skyen ✓";
+  statusFelt.className = "lagre-status lagret";
+}
 }
 async function hentProsjekterFraSupabase() {
   const { data, error } = await supabaseClient
