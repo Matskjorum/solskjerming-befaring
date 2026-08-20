@@ -241,18 +241,27 @@ async function slettValgtProsjekt(id) {
   if (!prosjekt) return;
 
   // Slett fra Supabase først
-  if (prosjekt.supabaseId) {
-    const { error } = await supabaseClient
-      .from("Prosjekter")
-      .delete()
-      .eq("id", prosjekt.supabaseId);
+ if (!prosjekt.supabaseId) {
+  alert("Prosjektet mangler Supabase-ID og kan derfor ikke slettes fra skyen.");
+  return;
+}
 
-    if (error) {
-      console.error("Feil ved sletting fra skyen:", error);
-      alert("Prosjektet kunne ikke slettes fra skyen.");
-      return;
-    }
-  }
+const { data, error } = await supabaseClient
+  .from("Prosjekter")
+  .delete()
+  .eq("id", prosjekt.supabaseId)
+  .select();
+
+if (error) {
+  console.error("Feil ved sletting fra skyen:", error);
+  alert("Prosjektet kunne ikke slettes fra skyen:\n" + error.message);
+  return;
+}
+
+if (!data || data.length === 0) {
+  alert("Fant ikke prosjektet i skyen. Supabase-ID: " + prosjekt.supabaseId);
+  return;
+}
 
   // Deretter lokalt
   prosjekter = prosjekter.filter(p => p.id !== id);
