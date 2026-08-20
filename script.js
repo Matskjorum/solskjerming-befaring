@@ -200,7 +200,6 @@ async function hentProsjekterFraSupabase() {
   visProsjektListe();
   lastAktivtProsjekt();
 
-  alert(`Fant ${prosjekter.length} prosjekt(er) i skyen.`);
 }
 
 function velgProsjekt(id) {
