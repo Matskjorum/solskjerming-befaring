@@ -202,6 +202,15 @@ function tilbakeTilProsjekter() {
   document.getElementById("prosjektForside").style.display = "block";
   visProsjektListe();
 }
+function endreProsjektStatus(status) {
+  const prosjekt = hentAktivtProsjekt();
+  if (!prosjekt) return;
+
+  prosjekt.status = status;
+
+  lagreProsjekter();
+  visProsjektListe();
+}
 function slettValgtProsjekt(id) {
   if (!confirm("Er du sikker på at du vil slette dette prosjektet?")) return;
 
@@ -941,6 +950,10 @@ function lastAktivtProsjekt() {
   }
 
   vinduer = prosjekt.vinduer || [];
+  const statusVelger = document.getElementById("prosjektStatus");
+if (statusVelger) {
+  statusVelger.value = prosjekt.status || "befaring";
+}
 
   felt.forEach(id => {
     document.getElementById(id).value = prosjekt[id] || "";
