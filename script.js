@@ -918,24 +918,60 @@ function visProsjektListe() {
   }
 
   let html = "";
+  const statusTekster = {
+  befaring: "Befaring",
+  befaring_ferdig: "Befaring ferdig",
+  tilbud: "Tilbud under arbeid",
+  sendt: "Tilbud sendt",
+  akseptert: "Akseptert",
+  avslatt: "Ikke akseptert"
+};
 
   const filtrerteProsjekter = prosjekter.filter(p => (p.status || "befaring") === aktivStatus);
   filtrerteProsjekter.forEach(p => {
     const aktiv = p.id === aktivtProsjektId ? "aktivt-prosjekt" : "";
 
-    html += `
-      <div class="prosjekt-rad ${aktiv}">
-        <div>
-          <strong>${p.prosjektNr}</strong><br>
-          <span>${p.kundeNavn || "Uten kundenavn"}</span>
-        </div>
+   const status = p.status || "befaring";
+const statusTekst = statusTekster[status] || status;
 
-        <div class="prosjekt-knapper">
-          <button onclick="velgProsjekt('${p.id}')">Åpne</button>
-          <button class="danger" onclick="slettValgtProsjekt('${p.id}')">Slett</button>
-        </div>
-      </div>
-    `;
+let sistEndret = "";
+if (p.updatedAt) {
+  const dato = new Date(p.updatedAt);
+  sistEndret = dato.toLocaleString("no-NO");
+}
+
+html += `
+  <div class="prosjekt-rad ${aktiv}">
+
+    <div class="prosjekt-info">
+      <strong class="prosjekt-nummer">${p.prosjektNr || "Uten prosjektnr."}</strong>
+
+      <span class="prosjekt-kunde">
+        ${p.kundeNavn || "Uten kundenavn"}
+      </span>
+
+      <span class="prosjekt-adresse">
+        ${p.adresse || ""}
+      </span>
+
+      <span class="status-badge status-${status}">
+        ${statusTekst}
+      </span>
+
+      ${sistEndret ? `
+        <span class="prosjekt-endret">
+          Sist endret: ${sistEndret}
+        </span>
+      ` : ""}
+    </div>
+
+    <div class="prosjekt-knapper">
+      <button onclick="velgProsjekt('${p.id}')">Åpne</button>
+      <button class="danger" onclick="slettValgtProsjekt('${p.id}')">Slett</button>
+    </div>
+
+  </div>
+`;
   });
 
   container.innerHTML = html;
