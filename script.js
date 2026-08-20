@@ -138,6 +138,7 @@ if (statusFelt) {
   statusFelt.className = "lagre-status lagret";
 }
 }
+  }
 async function hentProsjekterFraSupabase() {
   const { data, error } = await supabaseClient
     .from("Prosjekter")
