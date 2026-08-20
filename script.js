@@ -202,6 +202,12 @@ function tilbakeTilProsjekter() {
   document.getElementById("prosjektForside").style.display = "block";
   visProsjektListe();
 }
+function toggleMeny() {
+  const meny = document.getElementById("sideMeny");
+  if (!meny) return;
+
+  meny.classList.toggle("apen");
+}
 function endreProsjektStatus(status) {
   const prosjekt = hentAktivtProsjekt();
   if (!prosjekt) return;
