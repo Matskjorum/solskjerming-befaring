@@ -143,7 +143,6 @@ if (statusFelt) {
 }
 
 async function hentProsjekterFraSupabase() {
-async function hentProsjekterFraSupabase() {
   const { data, error } = await supabaseClient
     .from("Prosjekter")
     if (statusFelt) {
