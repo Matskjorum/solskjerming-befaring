@@ -1331,7 +1331,7 @@ function visTilbud() {
         id="styringPris_${index}"
         type="number"
         placeholder="Pris pr stk"
-        value="${s.pris || ""}"
+        value="${s.pris ?? standardStyringspriser[s.type] ?? ""}"
       >
     </div>
   `;
