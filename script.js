@@ -1,6 +1,18 @@
 const SUPABASE_URL = "https://dztuqcbgdxdjupeldpdd.supabase.co";
 const SUPABASE_KEY = "sb_publishable_VE7ILmv2yqDPsi6wHF_6iw_Ab_O_jLe";
+const standardStyringspriser = {
+  "Situo 1 io": 608,
+  "Situo 5 io": 952,
+  "Smoove Origin io": 850,
+  "Situo 1 io a/m": 872,
+  "Situo 5 io a/m": 960,
+  "Solsensor": 1752,
+  "Vindsensor": 2000,
+  "Somfy TaHoma Switch": 2300,
+  "WT styring": 0
+};
 
+const STANDARD_MONTASJE = 2000;
 const supabaseClient = supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
