@@ -96,7 +96,7 @@ async function lagreProsjektTilSupabase() {
       console.error("Feil ved oppdatering:", error);
       return;
     }
-
+alert("Prosjektet er oppdatert i skyen!");
   } else {
     const { data, error } = await supabaseClient
       .from("Prosjekter")
