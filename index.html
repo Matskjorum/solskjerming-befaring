@@ -33,7 +33,7 @@
 
 <div id="appInnhold" style="display:none;">
   <div class="app">
-    <nav class="side-menu">
+    <nav id="sideMeny" class="side-menu">
   <button onclick="velgStatus('befaring')">📋 Befaringer</button>
   <button onclick="velgStatus('tilbud')">💰 Tilbud under arbeid</button>
   <button onclick="velgStatus('sendt')">📤 Sendte tilbud</button>
@@ -42,6 +42,7 @@
 </nav>
 
 <main class="main-content">
+  <button class="meny-knapp" onclick="toggleMeny()">☰</button>
   <div id="lagreStatus" class="lagre-status">
   Klar
 </div>
