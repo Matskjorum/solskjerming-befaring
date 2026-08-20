@@ -223,12 +223,23 @@ async function loggInn() {
   }
 
   visApp();
+  visBrukerNavn(data.user);
 }
 function visApp() {
   document.getElementById("loginBoks").style.display = "none";
   document.getElementById("appInnhold").style.display = "block";
 }
+function visBrukerNavn(user) {
+  const brukerNavn = {
+    "hei@innlandetsolskjerming.no": "Mats Kjørum",
+    "christoffer@innlandetsolskjerming.no": "Christoffer Lysen Rismoen"
+  };
 
+  const navnFelt = document.getElementById("brukerNavn");
+  if (!navnFelt || !user) return;
+
+  navnFelt.textContent = brukerNavn[user.email] || user.email;
+}
 function visLogin() {
   document.getElementById("loginBoks").style.display = "block";
   document.getElementById("appInnhold").style.display = "none";
@@ -240,10 +251,23 @@ async function sjekkInnlogging() {
 
 if (session) {
   visApp();
+  visBrukerNavn(session.user);
   await hentProsjekterFraSupabase();
 } else {
   visLogin();
 }
+}
+async function loggUt() {
+  const { error } = await supabaseClient.auth.signOut();
+
+  if (error) {
+    alert("Kunne ikke logge ut.");
+    console.error(error);
+    return;
+  }
+
+  document.getElementById("brukerNavn").textContent = "";
+  visLogin();
 }
 
 const felt = [
