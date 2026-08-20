@@ -124,6 +124,8 @@ if (statusFelt) {
     }
  
 
+  }  // avslutter else-delen
+
   localStorage.setItem(
     "prosjekter",
     JSON.stringify(prosjekter)
@@ -133,10 +135,14 @@ if (statusFelt) {
     "aktivtProsjektId",
     aktivtProsjektId || ""
   );
- 
-}
-}
+
+  if (statusFelt) {
+    statusFelt.textContent = "Lagret i skyen ✓";
+    statusFelt.className = "lagre-status lagret";
   }
+}
+
+async function hentProsjekterFraSupabase() {
 async function hentProsjekterFraSupabase() {
   const { data, error } = await supabaseClient
     .from("Prosjekter")
