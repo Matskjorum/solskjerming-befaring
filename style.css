@@ -380,3 +380,16 @@ details.card summary::after {
 details.card[open] summary::after {
   content: "−";
 }
+.lagre-status {
+  font-size: 14px;
+  color: #4b5563;
+  margin: 8px 0 14px;
+}
+
+.lagre-status.lagrer {
+  color: #b7791f;
+}
+
+.lagre-status.lagret {
+  color: #2f855a;
+}
