@@ -98,7 +98,6 @@ async function lagreProsjektTilSupabase() {
       console.error("Feil ved oppdatering:", error);
       return;
     }
-alert("Prosjektet er oppdatert i skyen!");
   } else {
     const { data, error } = await supabaseClient
       .from("Prosjekter")
@@ -116,8 +115,7 @@ alert("Prosjektet er oppdatert i skyen!");
     if (data && data.length > 0) {
       prosjekt.supabaseId = data[0].id;
     }
-    alert("Prosjektet er lagret i skyen! ID: " + prosjekt.supabaseId);
-  }
+ 
 
   localStorage.setItem(
     "prosjekter",
