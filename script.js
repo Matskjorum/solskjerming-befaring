@@ -423,7 +423,7 @@ if (harAndreVinduer) {
   duk,
   brakett,
    pris,
-  montasje,
+  montasje: montasje || STANDARD_MONTASJE,
   kommentar
 };
 
