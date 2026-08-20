@@ -56,6 +56,8 @@ function hentAktivtProsjekt() {
 function lagreProsjekter() {
   localStorage.setItem("prosjekter", JSON.stringify(prosjekter));
   localStorage.setItem("aktivtProsjektId", aktivtProsjektId || "");
+
+  lagreProsjektTilSupabase();
 }
 async function lagreProsjektTilSupabase() {
   const prosjekt = hentAktivtProsjekt();
