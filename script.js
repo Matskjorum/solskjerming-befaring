@@ -1046,6 +1046,7 @@ function leggTilStyring() {
   document.getElementById("styringAntall").value = 1;
 
   visStyringer();
+  visTilbud();
 }
 
 function slettStyring(index) {
@@ -1056,6 +1057,7 @@ function slettStyring(index) {
 
   lagreProsjekter();
   visStyringer();
+  visTilbud();
 }
 
 function visStyringer() {
