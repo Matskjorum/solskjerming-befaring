@@ -459,3 +459,39 @@ details.card[open] summary::after {
     max-width: 300px;
   }
 }
+/* DESKTOP */
+@media (min-width: 900px) {
+
+  .app {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+
+  .main-content {
+    width: calc(100% - 120px);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+    box-sizing: border-box;
+  }
+
+  .app-header {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  #prosjektForside,
+  #prosjektArbeidsflate {
+    width: 100%;
+  }
+
+  .card {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  #prosjektListe {
+    width: 100%;
+  }
+}
