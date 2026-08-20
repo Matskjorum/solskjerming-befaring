@@ -12,7 +12,6 @@ const standardStyringspriser = {
   "WT styring": 0
 };
 
-const STANDARD_MONTASJE = 2000;
 const supabaseClient = supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
@@ -423,7 +422,7 @@ if (harAndreVinduer) {
   duk,
   brakett,
    pris,
-  montasje: montasje || STANDARD_MONTASJE,
+  montasje,
   kommentar
 };
 
@@ -1349,7 +1348,7 @@ function visTilbud() {
           id="tilbudMontasje_${index}"
           type="number"
           placeholder="Montasjepris eks. mva"
-          value="${vindu.montasje || STANDARD_MONTASJE}"
+          value="${vindu.montasje || ""}"
         >
       </div>
     `;
