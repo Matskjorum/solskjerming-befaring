@@ -145,10 +145,6 @@ if (statusFelt) {
 async function hentProsjekterFraSupabase() {
   const { data, error } = await supabaseClient
     .from("Prosjekter")
-    if (statusFelt) {
-  statusFelt.textContent = "Lagret i skyen ✓";
-  statusFelt.className = "lagre-status lagret";
-}
     .select("*")
     .order("created_at", { ascending: false });
 
