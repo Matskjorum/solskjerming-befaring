@@ -197,6 +197,39 @@
   >
 </div>
 </div>
+  <details class="card" open>
+  <summary>📞 Aktivitetslogg</summary>
+
+  <select id="aktivitetType">
+    <option value="">Velg aktivitet</option>
+    <option value="Telefon">Telefon</option>
+    <option value="E-post">E-post</option>
+    <option value="SMS">SMS</option>
+    <option value="Møte">Møte</option>
+    <option value="Annet">Annet</option>
+  </select>
+
+  <textarea
+    id="aktivitetKommentar"
+    rows="3"
+    placeholder="Kort kommentar..."
+  ></textarea>
+
+  <label for="aktivitetNesteOppfolging">
+    <strong>Neste oppfølging</strong>
+  </label>
+
+  <input
+    type="date"
+    id="aktivitetNesteOppfolging"
+  >
+
+  <button onclick="registrerAktivitet()">
+    + Registrer aktivitet
+  </button>
+
+  <div id="aktivitetsListe"></div>
+</details>
     <details class="card" open>
   <summary>👤 Kundeinfo</summary>
 
