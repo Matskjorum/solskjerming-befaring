@@ -257,6 +257,7 @@ function visSalg() {
   }
 
   oppdaterSalgsDashboard();
+  oppdaterOppfolging();
 }
 function oppdaterSalgsDashboard() {
   const statusData = {
@@ -296,6 +297,95 @@ function oppdaterSalgsDashboard() {
       sumFelt.textContent = `${sum.toLocaleString("no-NO")} kr`;
     }
   });
+}
+function oppdaterOppfolging() {
+  const forfaltEl = document.getElementById("oppfolgingForfalt");
+  const idagEl = document.getElementById("oppfolgingIdag");
+  const kommendeEl = document.getElementById("oppfolgingKommende");
+
+  if (!forfaltEl || !idagEl || !kommendeEl) return;
+
+  const idag = new Date();
+  idag.setHours(0, 0, 0, 0);
+
+  const forfalt = [];
+  const idagListe = [];
+  const kommende = [];
+
+  prosjekter.forEach(prosjekt => {
+    // Bare aktive tilbud skal følges opp
+    if (!["tilbud", "sendt"].includes(prosjekt.status)) return;
+    if (!prosjekt.neste_oppfolging) return;
+
+    const dato = new Date(prosjekt.neste_oppfolging + "T00:00:00");
+
+    if (dato < idag) {
+      forfalt.push(prosjekt);
+    } else if (dato.getTime() === idag.getTime()) {
+      idagListe.push(prosjekt);
+    } else {
+      kommende.push(prosjekt);
+    }
+  });
+
+  const sorter = liste => {
+    liste.sort((a, b) =>
+      new Date(a.neste_oppfolging) - new Date(b.neste_oppfolging)
+    );
+  };
+
+  sorter(forfalt);
+  sorter(idagListe);
+  sorter(kommende);
+
+  function lagHtml(liste, tomTekst) {
+    if (liste.length === 0) {
+      return `<p>${tomTekst}</p>`;
+    }
+
+    return liste.map(prosjekt => {
+      const dato = new Date(
+        prosjekt.neste_oppfolging + "T00:00:00"
+      ).toLocaleDateString("no-NO");
+
+      const verdi = Number(prosjekt.tilbudsverdi || 0)
+        .toLocaleString("no-NO");
+
+      return `
+        <div class="oppfolging-rad">
+          <div>
+            <strong>${prosjekt.kundeNavn || "Uten kundenavn"}</strong><br>
+            <span>${prosjekt.prosjektNr || ""}</span><br>
+            <span>${verdi} kr</span>
+          </div>
+
+          <div>
+            <strong>${dato}</strong><br>
+            <span>${prosjekt.telefon || ""}</span>
+          </div>
+
+          <button onclick="velgProsjekt('${prosjekt.id}')">
+            Åpne
+          </button>
+        </div>
+      `;
+    }).join("");
+  }
+
+  forfaltEl.innerHTML = lagHtml(
+    forfalt,
+    "Ingen forfalte oppfølginger."
+  );
+
+  idagEl.innerHTML = lagHtml(
+    idagListe,
+    "Ingen oppfølginger i dag."
+  );
+
+  kommendeEl.innerHTML = lagHtml(
+    kommende,
+    "Ingen kommende oppfølginger."
+  );
 }
 function eksporterSalgsrapport() {
   const fra = document.getElementById("salgsrapportFra")?.value;
