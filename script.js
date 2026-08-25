@@ -1455,14 +1455,43 @@ function eksporterFabrikkPDF() {
   const filnavn = `fabrikkbestilling-${prosjekt.prosjektNr || "prosjekt"}.pdf`;
   doc.save(filnavn);
 }
-  function endreProsjektStatus(nyStatus) {
+ function endreProsjektStatus(nyStatus) {
   const prosjekt = hentAktivtProsjekt();
   if (!prosjekt) return;
 
+  if (nyStatus === "avslatt") {
+    const aarsak = prompt(
+      "Hvorfor ble jobben tapt?\n\n" +
+      "Skriv ett av disse alternativene:\n" +
+      "- Pris\n" +
+      "- Leveringstid\n" +
+      "- Valgte annen leverandør\n" +
+      "- Prosjekt kansellert\n" +
+      "- Annet"
+    );
+
+    if (aarsak === null) {
+      return;
+    }
+
+    prosjekt.tapt_arsak = aarsak.trim();
+
+    const kommentar = prompt(
+      "Valgfri kommentar om hvorfor jobben ble tapt:"
+    );
+
+    prosjekt.tapt_kommentar = kommentar ? kommentar.trim() : "";
+  } else {
+    prosjekt.tapt_arsak = "";
+    prosjekt.tapt_kommentar = "";
+  }
+
   prosjekt.status = nyStatus;
+
   lagreProsjekter();
   visProsjektListe();
   visOversikt();
+  oppdaterSalgsDashboard();
 
   alert("Prosjektstatus er oppdatert.");
 }
