@@ -278,6 +278,97 @@ function oppdaterSalgsDashboard() {
     }
   });
 }
+function eksporterSalgsrapport() {
+  const fra = document.getElementById("salgsrapportFra")?.value;
+  const til = document.getElementById("salgsrapportTil")?.value;
+
+  if (!fra || !til) {
+    alert("Velg fra- og til-dato først.");
+    return;
+  }
+
+  const fraDato = new Date(fra + "T00:00:00");
+  const tilDato = new Date(til + "T23:59:59");
+
+  const statusTekster = {
+    tilbud: "Tilbud under arbeid",
+    sendt: "Tilbud sendt",
+    akseptert: "Akseptert",
+    avslatt: "Tapt",
+    befaring: "Befaring",
+    befaring_ferdig: "Befaring ferdig"
+  };
+
+  const rapportProsjekter = prosjekter.filter(p => {
+    if (!p.createdAt) return false;
+
+    const dato = new Date(p.createdAt);
+    return dato >= fraDato && dato <= tilDato;
+  });
+
+  if (rapportProsjekter.length === 0) {
+    alert("Ingen prosjekter funnet i valgt periode.");
+    return;
+  }
+
+  const kolonner = [
+    "Prosjektnr",
+    "Kunde",
+    "Adresse",
+    "Status",
+    "Tilbudsverdi eks. mva",
+    "Opprettet dato",
+    "Sist endret",
+    "Tapt årsak",
+    "Tapt kommentar",
+    "Neste oppfølging"
+  ];
+
+  const csvLinjer = [kolonner];
+
+  rapportProsjekter.forEach(p => {
+    csvLinjer.push([
+      p.prosjektNr || "",
+      p.kundeNavn || "",
+      p.adresse || "",
+      statusTekster[p.status] || p.status || "",
+      Number(p.tilbudsverdi || 0),
+      p.createdAt ? new Date(p.createdAt).toLocaleDateString("no-NO") : "",
+      p.updatedAt ? new Date(p.updatedAt).toLocaleString("no-NO") : "",
+      p.tapt_arsak || "",
+      p.tapt_kommentar || "",
+      p.neste_oppfolging || ""
+    ]);
+  });
+
+  const csv = csvLinjer
+    .map(rad =>
+      rad
+        .map(verdi => {
+          const tekst = String(verdi ?? "").replace(/"/g, '""');
+          return `"${tekst}"`;
+        })
+        .join(";")
+    )
+    .join("\n");
+
+  const bom = "\uFEFF";
+  const blob = new Blob([bom + csv], {
+    type: "text/csv;charset=utf-8;"
+  });
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = `salgsrapport_${fra}_${til}.csv`;
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  URL.revokeObjectURL(url);
+}
 function toggleMeny() {
   const meny = document.getElementById("sideMeny");
   if (!meny) return;
