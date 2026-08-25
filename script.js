@@ -231,6 +231,11 @@ if (prosjekt && prosjekt.status === "avslatt") {
   if (taptDetaljer) taptDetaljer.style.display = "none";
   if (taptArsak) taptArsak.value = "";
   if (taptKommentar) taptKommentar.value = "";
+  const nesteOppfolging = document.getElementById("nesteOppfolging");
+
+if (nesteOppfolging) {
+  nesteOppfolging.value = prosjekt?.neste_oppfolging || "";
+}
 }
   document.getElementById("prosjektForside").style.display = "none";
   document.getElementById("prosjektArbeidsflate").style.display = "block";
@@ -1509,6 +1514,16 @@ function lagreTaptDetaljer() {
 
   lagreProsjekter();
   oppdaterSalgsDashboard();
+}
+function lagreNesteOppfolging() {
+  const prosjekt = hentAktivtProsjekt();
+  if (!prosjekt) return;
+
+  const felt = document.getElementById("nesteOppfolging");
+
+  prosjekt.neste_oppfolging = felt ? felt.value : "";
+
+  lagreProsjekter();
 }
 function visTilbud() {
   const oversikt = document.getElementById("oversikt");
