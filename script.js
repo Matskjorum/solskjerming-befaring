@@ -222,9 +222,61 @@ function velgProsjekt(id) {
   document.getElementById("prosjektArbeidsflate").style.display = "block";
 }
 function tilbakeTilProsjekter() {
+  document.getElementById("salgSide").style.display = "none";
   document.getElementById("prosjektArbeidsflate").style.display = "none";
   document.getElementById("prosjektForside").style.display = "block";
   visProsjektListe();
+}
+function visSalg() {
+  document.getElementById("prosjektForside").style.display = "none";
+  document.getElementById("prosjektArbeidsflate").style.display = "none";
+  document.getElementById("salgSide").style.display = "block";
+
+  const meny = document.getElementById("sideMeny");
+  if (meny) {
+    meny.classList.remove("open");
+  }
+
+  oppdaterSalgsDashboard();
+}
+function oppdaterSalgsDashboard() {
+  const statusData = {
+    tilbud: {
+      antallId: "salgTilbudAntall",
+      sumId: "salgTilbudSum"
+    },
+    sendt: {
+      antallId: "salgSendtAntall",
+      sumId: "salgSendtSum"
+    },
+    akseptert: {
+      antallId: "salgAkseptertAntall",
+      sumId: "salgAkseptertSum"
+    },
+    avslatt: {
+      antallId: "salgTaptAntall",
+      sumId: "salgTaptSum"
+    }
+  };
+
+  Object.entries(statusData).forEach(([status, felter]) => {
+    const liste = prosjekter.filter(p => p.status === status);
+
+    const sum = liste.reduce((total, p) => {
+      return total + Number(p.tilbudsverdi || 0);
+    }, 0);
+
+    const antallFelt = document.getElementById(felter.antallId);
+    const sumFelt = document.getElementById(felter.sumId);
+
+    if (antallFelt) {
+      antallFelt.textContent = `${liste.length} prosjekt${liste.length === 1 ? "" : "er"}`;
+    }
+
+    if (sumFelt) {
+      sumFelt.textContent = `${sum.toLocaleString("no-NO")} kr`;
+    }
+  });
 }
 function toggleMeny() {
   const meny = document.getElementById("sideMeny");
@@ -1505,7 +1557,26 @@ prosjekt.tillegg = {
   frakt: document.getElementById("tillegg_frakt")?.value || "",
   annet: document.getElementById("tillegg_annet")?.value || ""
 };
+  let tilbudsverdi = 0;
+
+prosjekt.vinduer.forEach(vindu => {
+  tilbudsverdi += Number(vindu.pris || 0);
+  tilbudsverdi += Number(vindu.montasje || 0);
+});
+
+(prosjekt.styringer || []).forEach(s => {
+  tilbudsverdi += Number(s.pris || 0) * Number(s.antall || 1);
+});
+
+tilbudsverdi += Number(prosjekt.tillegg?.stillas || 0);
+tilbudsverdi += Number(prosjekt.tillegg?.lift || 0);
+tilbudsverdi += Number(prosjekt.tillegg?.elektro || 0);
+tilbudsverdi += Number(prosjekt.tillegg?.frakt || 0);
+tilbudsverdi += Number(prosjekt.tillegg?.annet || 0);
+
+prosjekt.tilbudsverdi = tilbudsverdi;
   lagreProsjekter();
+  oppdaterSalgsDashboard();
 
   alert("Tilbudspriser er lagret.");
   visTilbud();
