@@ -107,6 +107,11 @@ if (statusFelt) {
     styringer: prosjekt.styringer || [],
     tillegg: prosjekt.tillegg || {},
     status: prosjekt.status || "befaring",
+    tilbudsverdi: prosjekt.tilbudsverdi ?? null,
+tapt_arsak: prosjekt.tapt_arsak || null,
+tapt_kommentar: prosjekt.tapt_kommentar || null,
+sist_fulgt_opp: prosjekt.sist_fulgt_opp || null,
+neste_oppfolging: prosjekt.neste_oppfolging || null,
     updated_at: new Date().toISOString()
   };
 
