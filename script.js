@@ -381,6 +381,7 @@ if (tilbudListe) {
     }).join("");
   }
 }
+}
 function visSalg() {
   document.getElementById("prosjektForside").style.display = "none";
   document.getElementById("prosjektArbeidsflate").style.display = "none";
