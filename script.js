@@ -189,6 +189,11 @@ async function hentProsjekterFraSupabase() {
     styringer: p.styringer || [],
     tillegg: p.tillegg || {},
     status: p.status || "befaring",
+    tilbudsverdi: p.tilbudsverdi ?? null,
+tapt_arsak: p.tapt_arsak || "",
+tapt_kommentar: p.tapt_kommentar || "",
+sist_fulgt_opp: p.sist_fulgt_opp || "",
+neste_oppfolging: p.neste_oppfolging || "",
     opprettetAv: p.opprettet_av || "",
     createdAt: p.created_at || "",
     updatedAt: p.updated_at || ""
