@@ -1557,24 +1557,31 @@ prosjekt.tillegg = {
   frakt: document.getElementById("tillegg_frakt")?.value || "",
   annet: document.getElementById("tillegg_annet")?.value || ""
 };
-  let tilbudsverdi = 0;
+const tall = verdi => {
+  const n = Number(verdi);
+  return Number.isFinite(n) ? n : 0;
+};
+
+let tilbudsverdi = 0;
 
 prosjekt.vinduer.forEach(vindu => {
-  tilbudsverdi += Number(vindu.pris || 0);
-  tilbudsverdi += Number(vindu.montasje || 0);
+  tilbudsverdi += tall(vindu.pris);
+  tilbudsverdi += tall(vindu.montasje);
 });
 
 (prosjekt.styringer || []).forEach(s => {
-  tilbudsverdi += Number(s.pris || 0) * Number(s.antall || 1);
+  tilbudsverdi += tall(s.pris) * tall(s.antall || 1);
 });
 
-tilbudsverdi += Number(prosjekt.tillegg?.stillas || 0);
-tilbudsverdi += Number(prosjekt.tillegg?.lift || 0);
-tilbudsverdi += Number(prosjekt.tillegg?.elektro || 0);
-tilbudsverdi += Number(prosjekt.tillegg?.frakt || 0);
-tilbudsverdi += Number(prosjekt.tillegg?.annet || 0);
+tilbudsverdi += tall(prosjekt.tillegg?.stillas);
+tilbudsverdi += tall(prosjekt.tillegg?.lift);
+tilbudsverdi += tall(prosjekt.tillegg?.elektro);
+tilbudsverdi += tall(prosjekt.tillegg?.frakt);
+tilbudsverdi += tall(prosjekt.tillegg?.annet);
 
 prosjekt.tilbudsverdi = tilbudsverdi;
+
+console.log("Beregnet tilbudsverdi:", tilbudsverdi);
   lagreProsjekter();
   oppdaterSalgsDashboard();
 
