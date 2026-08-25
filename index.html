@@ -39,6 +39,7 @@
   <button onclick="velgStatus('sendt')">📤 Sendte tilbud</button>
   <button onclick="velgStatus('akseptert')">✅ Akseptert</button>
   <button onclick="velgStatus('avslatt')">❌ Ikke akseptert</button>
+  <button onclick="visSalg()">📊 Salg</button>
 </nav>
 
 <main class="main-content">
@@ -72,6 +73,57 @@
 </details>
   </div>
 
+  <div id="salgSide" style="display:none;">
+
+  <div class="card">
+    <h2>📊 Salg</h2>
+
+    <div class="salgs-dashboard">
+
+      <div class="salg-kort">
+        <h3>Tilbud under arbeid</h3>
+        <p id="salgTilbudAntall">0 prosjekter</p>
+        <strong id="salgTilbudSum">0 kr</strong>
+      </div>
+
+      <div class="salg-kort">
+        <h3>Tilbud sendt</h3>
+        <p id="salgSendtAntall">0 prosjekter</p>
+        <strong id="salgSendtSum">0 kr</strong>
+      </div>
+
+      <div class="salg-kort">
+        <h3>Akseptert</h3>
+        <p id="salgAkseptertAntall">0 prosjekter</p>
+        <strong id="salgAkseptertSum">0 kr</strong>
+      </div>
+
+      <div class="salg-kort">
+        <h3>Tapt</h3>
+        <p id="salgTaptAntall">0 prosjekter</p>
+        <strong id="salgTaptSum">0 kr</strong>
+      </div>
+
+    </div>
+
+    <div class="salgsrapport">
+      <h3>Salgsrapport</h3>
+
+      <label>Fra dato</label>
+      <input type="date" id="salgsrapportFra">
+
+      <label>Til dato</label>
+      <input type="date" id="salgsrapportTil">
+
+      <button onclick="eksporterSalgsrapport()">
+        📄 Eksporter salgsrapport
+      </button>
+    </div>
+
+  </div>
+
+</div>
+  
 <div id="prosjektArbeidsflate" style="display:none;">  
   <button class="secondary" onclick="tilbakeTilProsjekter()">← Tilbake til prosjekter</button>
   <div class="card">
