@@ -1527,7 +1527,7 @@ html += `
       💾 Lagre tilbudspriser
     </button>
     
-   <button onclick="eksporterTilbudsPDF()">
+   <button onclick="lagreTilbudspriser(); eksporterTilbudsPDF()">
   📄 Generer tilbud
 </button> 
   `;
