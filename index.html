@@ -34,6 +34,7 @@
 <div id="appInnhold" style="display:none;">
   <div class="app">
     <nav id="sideMeny" class="side-menu">
+  <button onclick="visStartside()">🏠 Startside</button>
   <button onclick="velgStatus('befaring')">📋 Befaringer</button>
   <button onclick="velgStatus('tilbud')">💰 Tilbud under arbeid</button>
   <button onclick="velgStatus('sendt')">📤 Sendte tilbud</button>
@@ -61,6 +62,49 @@
     <p>Innlandet Solskjerming</p>
   </div>
 </header>
+  <div id="startSide" style="display:none;">
+
+  <div class="card">
+    <h2>🏠 Startside</h2>
+    <p>Oversikt over dagen</p>
+
+    <div class="salgs-dashboard">
+
+      <div class="salg-kort">
+        <h3>🔴 Forfalt</h3>
+        <p id="startForfaltAntall">0 oppfølginger</p>
+      </div>
+
+      <div class="salg-kort">
+        <h3>🟠 I dag</h3>
+        <p id="startIdagAntall">0 oppfølginger</p>
+      </div>
+
+      <div class="salg-kort">
+        <h3>📨 Tilbud sendt</h3>
+        <p id="startSendtAntall">0 tilbud</p>
+        <strong id="startSendtSum">0 kr</strong>
+      </div>
+
+      <div class="salg-kort">
+        <h3>✅ Akseptert</h3>
+        <p id="startAkseptertAntall">0 tilbud</p>
+        <strong id="startAkseptertSum">0 kr</strong>
+      </div>
+
+    </div>
+
+    <hr>
+
+    <h3>📞 Mine oppfølginger</h3>
+
+    <div id="startOppfolgingListe">
+      <p>Ingen oppfølginger akkurat nå.</p>
+    </div>
+
+  </div>
+
+</div>
   <div id="prosjektForside">
 <details class="card" open>
   <summary>📂 Prosjekter</summary>
