@@ -238,6 +238,7 @@ if (nesteOppfolging) {
 }
 }
   document.getElementById("prosjektForside").style.display = "none";
+  document.getElementById("startSide").style.display = "none";
   document.getElementById("prosjektArbeidsflate").style.display = "block";
 
   hentAktiviteter();
@@ -247,6 +248,105 @@ function tilbakeTilProsjekter() {
   document.getElementById("prosjektArbeidsflate").style.display = "none";
   document.getElementById("prosjektForside").style.display = "block";
   visProsjektListe();
+}
+function visStartside() {
+  document.getElementById("startSide").style.display = "block";
+  document.getElementById("prosjektForside").style.display = "none";
+  document.getElementById("prosjektArbeidsflate").style.display = "none";
+  document.getElementById("salgSide").style.display = "none";
+
+  const meny = document.getElementById("sideMeny");
+  if (meny) {
+    meny.classList.remove("apen");
+  }
+
+  oppdaterStartside();
+}
+function oppdaterStartside() {
+  const idag = new Date();
+  idag.setHours(0, 0, 0, 0);
+
+  const forfalt = [];
+  const idagListe = [];
+
+  const sendt = prosjekter.filter(p => p.status === "sendt");
+  const akseptert = prosjekter.filter(p => p.status === "akseptert");
+
+  prosjekter.forEach(prosjekt => {
+    if (!["tilbud", "sendt"].includes(prosjekt.status)) return;
+    if (!prosjekt.neste_oppfolging) return;
+
+    const dato = new Date(prosjekt.neste_oppfolging + "T00:00:00");
+
+    if (dato < idag) {
+      forfalt.push(prosjekt);
+    } else if (dato.getTime() === idag.getTime()) {
+      idagListe.push(prosjekt);
+    }
+  });
+
+  const sendtSum = sendt.reduce((sum, p) => {
+    return sum + Number(p.tilbudsverdi || 0);
+  }, 0);
+
+  const akseptertSum = akseptert.reduce((sum, p) => {
+    return sum + Number(p.tilbudsverdi || 0);
+  }, 0);
+
+  document.getElementById("startForfaltAntall").textContent =
+    `${forfalt.length} oppfølging${forfalt.length === 1 ? "" : "er"}`;
+
+  document.getElementById("startIdagAntall").textContent =
+    `${idagListe.length} oppfølging${idagListe.length === 1 ? "" : "er"}`;
+
+  document.getElementById("startSendtAntall").textContent =
+    `${sendt.length} tilbud`;
+
+  document.getElementById("startSendtSum").textContent =
+    `${sendtSum.toLocaleString("no-NO")} kr`;
+
+  document.getElementById("startAkseptertAntall").textContent =
+    `${akseptert.length} tilbud`;
+
+  document.getElementById("startAkseptertSum").textContent =
+    `${akseptertSum.toLocaleString("no-NO")} kr`;
+
+  const liste = document.getElementById("startOppfolgingListe");
+
+  const oppfolginger = [...forfalt, ...idagListe];
+
+  if (oppfolginger.length === 0) {
+    liste.innerHTML = "<p>Ingen oppfølginger akkurat nå.</p>";
+    return;
+  }
+
+  liste.innerHTML = oppfolginger.map(prosjekt => {
+    const dato = new Date(
+      prosjekt.neste_oppfolging + "T00:00:00"
+    ).toLocaleDateString("no-NO");
+
+    const verdi = Number(prosjekt.tilbudsverdi || 0)
+      .toLocaleString("no-NO");
+
+    return `
+      <div class="oppfolging-rad">
+        <div>
+          <strong>${prosjekt.kundeNavn || "Uten kundenavn"}</strong><br>
+          <span>${prosjekt.prosjektNr || ""}</span><br>
+          <span>${verdi} kr</span>
+        </div>
+
+        <div>
+          <strong>${dato}</strong><br>
+          <span>${prosjekt.telefon || ""}</span>
+        </div>
+
+        <button onclick="velgProsjekt('${prosjekt.id}')">
+          Åpne
+        </button>
+      </div>
+    `;
+  }).join("");
 }
 function visSalg() {
   document.getElementById("prosjektForside").style.display = "none";
