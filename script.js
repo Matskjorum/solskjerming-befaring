@@ -239,6 +239,8 @@ if (nesteOppfolging) {
 }
   document.getElementById("prosjektForside").style.display = "none";
   document.getElementById("prosjektArbeidsflate").style.display = "block";
+
+  hentAktiviteter();
 }
 function tilbakeTilProsjekter() {
   document.getElementById("salgSide").style.display = "none";
@@ -1614,6 +1616,138 @@ function lagreNesteOppfolging() {
   prosjekt.neste_oppfolging = felt ? felt.value : "";
 
   lagreProsjekter();
+}
+async function registrerAktivitet() {
+  const prosjekt = hentAktivtProsjekt();
+  if (!prosjekt || !prosjekt.supabaseId) {
+    alert("Prosjektet må være lagret i skyen først.");
+    return;
+  }
+
+  const type = document.getElementById("aktivitetType")?.value || "";
+  const kommentar = document.getElementById("aktivitetKommentar")?.value || "";
+  const nesteOppfolging =
+    document.getElementById("aktivitetNesteOppfolging")?.value || null;
+
+  if (!type) {
+    alert("Velg aktivitetstype.");
+    return;
+  }
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+    alert("Du må være innlogget.");
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from("Aktiviteter")
+    .insert({
+      prosjekt_id: prosjekt.supabaseId,
+      type: type,
+      kommentar: kommentar,
+      opprettet_av: user.id,
+      neste_oppfolging: nesteOppfolging
+    });
+
+  if (error) {
+    console.error("Feil ved registrering av aktivitet:", error);
+    alert("Kunne ikke registrere aktiviteten.");
+    return;
+  }
+
+  prosjekt.sist_fulgt_opp = new Date().toISOString();
+
+  if (nesteOppfolging) {
+    prosjekt.neste_oppfolging = nesteOppfolging;
+
+    const hovedFelt = document.getElementById("nesteOppfolging");
+    if (hovedFelt) {
+      hovedFelt.value = nesteOppfolging;
+    }
+  }
+
+  lagreProsjekter();
+
+  document.getElementById("aktivitetType").value = "";
+  document.getElementById("aktivitetKommentar").value = "";
+  document.getElementById("aktivitetNesteOppfolging").value = "";
+
+  await hentAktiviteter();
+}
+async function hentAktiviteter() {
+  const prosjekt = hentAktivtProsjekt();
+  const liste = document.getElementById("aktivitetsListe");
+
+  if (!liste) return;
+
+  if (!prosjekt || !prosjekt.supabaseId) {
+    liste.innerHTML = "<p>Ingen aktiviteter ennå.</p>";
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from("Aktiviteter")
+    .select("*")
+    .eq("prosjekt_id", prosjekt.supabaseId)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Feil ved henting av aktiviteter:", error);
+    liste.innerHTML = "<p>Kunne ikke hente aktiviteter.</p>";
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    liste.innerHTML = "<p>Ingen aktiviteter registrert ennå.</p>";
+    return;
+  }
+
+  const brukerNavn = {
+    "hei@innlandetsolskjerming.no": "Mats Kjørum",
+    "christoffer@innlandetsolskjerming.no": "Christoffer Lysen Rismoen"
+  };
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+  let navn = "";
+  if (user) {
+    navn = brukerNavn[user.email] || user.email;
+  }
+
+  liste.innerHTML = data.map(aktivitet => {
+    const dato = new Date(aktivitet.created_at)
+      .toLocaleString("no-NO");
+
+    const oppfolging = aktivitet.neste_oppfolging
+      ? new Date(aktivitet.neste_oppfolging + "T00:00:00")
+          .toLocaleDateString("no-NO")
+      : "";
+
+    return `
+      <div class="aktivitet-rad">
+        <strong>${aktivitet.type || "Aktivitet"}</strong>
+        <span>${dato}</span>
+
+        ${aktivitet.kommentar
+          ? `<p>${aktivitet.kommentar}</p>`
+          : ""}
+
+        ${oppfolging
+          ? `<small>Neste oppfølging: ${oppfolging}</small>`
+          : ""}
+
+        ${navn
+          ? `<small>Registrert av: ${navn}</small>`
+          : ""}
+      </div>
+    `;
+  }).join("");
 }
 function visTilbud() {
   const oversikt = document.getElementById("oversikt");
