@@ -218,6 +218,20 @@ function velgProsjekt(id) {
   lagreProsjekter();
   lastAktivtProsjekt();
 
+  const prosjekt = hentAktivtProsjekt();
+const taptDetaljer = document.getElementById("taptDetaljer");
+const taptArsak = document.getElementById("taptArsak");
+const taptKommentar = document.getElementById("taptKommentar");
+
+if (prosjekt && prosjekt.status === "avslatt") {
+  if (taptDetaljer) taptDetaljer.style.display = "block";
+  if (taptArsak) taptArsak.value = prosjekt.tapt_arsak || "";
+  if (taptKommentar) taptKommentar.value = prosjekt.tapt_kommentar || "";
+} else {
+  if (taptDetaljer) taptDetaljer.style.display = "none";
+  if (taptArsak) taptArsak.value = "";
+  if (taptKommentar) taptKommentar.value = "";
+}
   document.getElementById("prosjektForside").style.display = "none";
   document.getElementById("prosjektArbeidsflate").style.display = "block";
 }
@@ -1459,32 +1473,20 @@ function eksporterFabrikkPDF() {
   const prosjekt = hentAktivtProsjekt();
   if (!prosjekt) return;
 
-  if (nyStatus === "avslatt") {
-    const aarsak = prompt(
-      "Hvorfor ble jobben tapt?\n\n" +
-      "Skriv ett av disse alternativene:\n" +
-      "- Pris\n" +
-      "- Leveringstid\n" +
-      "- Valgte annen leverandør\n" +
-      "- Prosjekt kansellert\n" +
-      "- Annet"
-    );
+ const taptDetaljer = document.getElementById("taptDetaljer");
 
-    if (aarsak === null) {
-      return;
-    }
-
-    prosjekt.tapt_arsak = aarsak.trim();
-
-    const kommentar = prompt(
-      "Valgfri kommentar om hvorfor jobben ble tapt:"
-    );
-
-    prosjekt.tapt_kommentar = kommentar ? kommentar.trim() : "";
-  } else {
-    prosjekt.tapt_arsak = "";
-    prosjekt.tapt_kommentar = "";
+if (nyStatus === "avslatt") {
+  if (taptDetaljer) {
+    taptDetaljer.style.display = "block";
   }
+} else {
+  if (taptDetaljer) {
+    taptDetaljer.style.display = "none";
+  }
+
+  prosjekt.tapt_arsak = "";
+  prosjekt.tapt_kommentar = "";
+}
 
   prosjekt.status = nyStatus;
 
@@ -1494,6 +1496,19 @@ function eksporterFabrikkPDF() {
   oppdaterSalgsDashboard();
 
   alert("Prosjektstatus er oppdatert.");
+}
+function lagreTaptDetaljer() {
+  const prosjekt = hentAktivtProsjekt();
+  if (!prosjekt) return;
+
+  const arsaksFelt = document.getElementById("taptArsak");
+  const kommentarFelt = document.getElementById("taptKommentar");
+
+  prosjekt.tapt_arsak = arsaksFelt ? arsaksFelt.value : "";
+  prosjekt.tapt_kommentar = kommentarFelt ? kommentarFelt.value : "";
+
+  lagreProsjekter();
+  oppdaterSalgsDashboard();
 }
 function visTilbud() {
   const oversikt = document.getElementById("oversikt");
