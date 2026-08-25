@@ -137,6 +137,31 @@
     <option value="akseptert">Akseptert</option>
     <option value="avslatt">Ikke akseptert</option>
   </select>
+    <div id="taptDetaljer" style="display:none; margin-top:15px;">
+
+  <label for="taptArsak"><strong>Hvorfor ble jobben tapt?</strong></label>
+
+  <select id="taptArsak" onchange="lagreTaptDetaljer()">
+    <option value="">Velg årsak</option>
+    <option value="Pris">Pris</option>
+    <option value="Leveringstid">Leveringstid</option>
+    <option value="Valgte annen leverandør">Valgte annen leverandør</option>
+    <option value="Prosjekt kansellert">Prosjekt kansellert</option>
+    <option value="Annet">Annet</option>
+  </select>
+
+  <label for="taptKommentar" style="display:block; margin-top:12px;">
+    <strong>Kommentar</strong>
+  </label>
+
+  <textarea
+    id="taptKommentar"
+    rows="3"
+    placeholder="Valgfri kommentar..."
+    oninput="lagreTaptDetaljer()"
+  ></textarea>
+
+</div>
 </div>
     <details class="card" open>
   <summary>👤 Kundeinfo</summary>
