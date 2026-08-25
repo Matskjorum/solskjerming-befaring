@@ -317,9 +317,9 @@ function oppdaterStartside() {
 
   if (oppfolginger.length === 0) {
     liste.innerHTML = "<p>Ingen oppfølginger akkurat nå.</p>";
-    return;
   }
 
+if (oppfolginger.length > 0) {
   liste.innerHTML = oppfolginger.map(prosjekt => {
     const dato = new Date(
       prosjekt.neste_oppfolging + "T00:00:00"
@@ -347,6 +347,39 @@ function oppdaterStartside() {
       </div>
     `;
   }).join("");
+}
+const tilbudListe = document.getElementById("startTilbudUnderArbeid");
+
+if (tilbudListe) {
+  const tilbudUnderArbeid = prosjekter.filter(
+    prosjekt => prosjekt.status === "tilbud"
+  );
+
+  if (tilbudUnderArbeid.length === 0) {
+    tilbudListe.innerHTML = "<p>Ingen tilbud under arbeid.</p>";
+  } else {
+    tilbudListe.innerHTML = tilbudUnderArbeid.map(prosjekt => {
+      const verdi = Number(prosjekt.tilbudsverdi || 0)
+        .toLocaleString("no-NO");
+
+      return `
+        <div class="oppfolging-rad">
+          <div>
+            <strong>${prosjekt.kundeNavn || "Uten kundenavn"}</strong><br>
+            <span>${prosjekt.prosjektNr || ""}</span>
+          </div>
+
+          <div>
+            <strong>${verdi} kr</strong>
+          </div>
+
+          <button onclick="velgProsjekt('${prosjekt.id}')">
+            Åpne
+          </button>
+        </div>
+      `;
+    }).join("");
+  }
 }
 function visSalg() {
   document.getElementById("prosjektForside").style.display = "none";
