@@ -1593,9 +1593,14 @@ function velgStatus(status) {
   aktivVisning = status;
 
   localStorage.setItem("aktivStatus", aktivStatus);
-
+  
+document.getElementById("salgSide").style.display = "none";
+document.getElementById("prosjektArbeidsflate").style.display = "none";
+document.getElementById("prosjektForside").style.display = "block";
+  
   visProsjektListe();
   visOversikt();
+  
   document.getElementById("sideMeny").classList.remove("apen");
 }
 function eksporterTilbudsPDF() {
