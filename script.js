@@ -217,6 +217,7 @@ function velgProsjekt(id) {
 
   lagreProsjekter();
   lastAktivtProsjekt();
+  hentKunderTilProsjekt();
 
   const prosjekt = hentAktivtProsjekt();
 const taptDetaljer = document.getElementById("taptDetaljer");
