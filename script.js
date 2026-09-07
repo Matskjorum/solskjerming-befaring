@@ -115,7 +115,9 @@ sist_fulgt_opp: prosjekt.sist_fulgt_opp || null,
 neste_oppfolging: prosjekt.neste_oppfolging || null,
     updated_at: new Date().toISOString()
   };
-
+console.log("PROSJEKT SOM LAGRES:", prosjekt);
+console.log("DATA TIL SUPABASE:", prosjektData);
+  
   const erSkyProsjekt = !!prosjekt.supabaseId;
 
   if (erSkyProsjekt) {
