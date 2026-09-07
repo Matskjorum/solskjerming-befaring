@@ -98,6 +98,8 @@ if (statusFelt) {
 
   const prosjektData = {
     kunde_id: prosjekt.kunde_id ?? null,
+    kundeklasse: prosjekt.kundeklasse || "C",
+standard_paslag: Number(prosjekt.standard_paslag ?? 40),
     prosjekt_nr: prosjekt.prosjektNr || "",
     kundenavn: prosjekt.kundeNavn || "",
     adresse: prosjekt.adresse || "",
