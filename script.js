@@ -115,19 +115,16 @@ sist_fulgt_opp: prosjekt.sist_fulgt_opp || null,
 neste_oppfolging: prosjekt.neste_oppfolging || null,
     updated_at: new Date().toISOString()
   };
-console.log("PROSJEKT SOM LAGRES:", prosjekt);
-console.log("DATA TIL SUPABASE:", prosjektData);
+
   
   const erSkyProsjekt = !!prosjekt.supabaseId;
 
   if (erSkyProsjekt) {
-    const { data, error } = await supabaseClient
+   const { error } = await supabaseClient
   .from("Prosjekter")
   .update(prosjektData)
-  .eq("id", prosjekt.supabaseId)
-  .select("id, kunde_id");
+  .eq("id", prosjekt.supabaseId);
 
-console.log("RESULTAT FRA UPDATE:", data, error);
 
     if (error) {
       console.error("Feil ved oppdatering:", error);
