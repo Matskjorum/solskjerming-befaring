@@ -128,6 +128,40 @@
   <div id="kunderSide" style="display:none;">
   <div class="card">
     <h2>👥 Kunderegister</h2>
+    <button onclick="visNyKunde()">➕ Ny kunde</button>
+    <div id="nyKundeSkjema" style="display:none; margin-top:15px;">
+
+  <label><strong>Kundenavn</strong></label>
+  <input type="text" id="nyKundeNavn" placeholder="Kundenavn">
+
+  <label><strong>Kundetype</strong></label>
+  <select id="nyKundeType">
+    <option value="Privat">Privat</option>
+    <option value="Bedrift">Bedrift</option>
+    <option value="Entreprenør">Entreprenør</option>
+    <option value="Elektro">Elektro</option>
+    <option value="Restaurant">Restaurant</option>
+    <option value="Annet">Annet</option>
+  </select>
+
+  <label><strong>Kundeklasse</strong></label>
+  <select id="nyKundeKlasse">
+    <option value="A">A-kunde – 20 % påslag</option>
+    <option value="B">B-kunde – 30 % påslag</option>
+    <option value="C" selected>C-kunde – 40 % påslag</option>
+  </select>
+
+  <label><strong>Kontaktperson</strong></label>
+  <input type="text" id="nyKundeKontaktperson" placeholder="Kontaktperson">
+
+  <label><strong>Telefon</strong></label>
+  <input type="text" id="nyKundeTelefon" placeholder="Telefon">
+
+  <label><strong>E-post</strong></label>
+  <input type="email" id="nyKundeEpost" placeholder="E-post">
+
+  <button onclick="lagreNyKunde()">💾 Lagre kunde</button>
+</div>
    <div id="kundeListe">
   <p>Ingen kunder registrert ennå.</p>
 </div>
