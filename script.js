@@ -399,6 +399,38 @@ async function hentKunderTilProsjekt() {
     `;
   });
 }
+async function velgKundeTilProsjekt(kundeId) {
+  if (!kundeId) return;
+
+  const { data: kunde, error } = await supabaseClient
+    .from("Kunder")
+    .select("*")
+    .eq("id", kundeId)
+    .single();
+
+  if (error || !kunde) {
+    console.error("Kunne ikke hente kunde:", error);
+    return;
+  }
+
+  document.getElementById("kundeNavn").value = kunde.kundenavn || "";
+  document.getElementById("adresse").value = kunde.adresse || "";
+  document.getElementById("poststed").value = kunde.poststed || "";
+  document.getElementById("telefon").value = kunde.telefon || "";
+  document.getElementById("epost").value = kunde.epost || "";
+
+  const prosjekt = hentAktivtProsjekt();
+  if (prosjekt) {
+    prosjekt.kunde_id = kunde.id;
+    prosjekt.kundeNavn = kunde.kundenavn || "";
+    prosjekt.adresse = kunde.adresse || "";
+    prosjekt.poststed = kunde.poststed || "";
+    prosjekt.telefon = kunde.telefon || "";
+    prosjekt.epost = kunde.epost || "";
+
+    lagreProsjekter();
+  }
+}
 function filtrerKunder() {
   const sokefelt = document.getElementById("kundeSok");
   const kundeListe = document.getElementById("kundeListe");
