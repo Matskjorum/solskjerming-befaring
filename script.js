@@ -2435,6 +2435,16 @@ tilbudsverdi += tall(prosjekt.tillegg?.elektro);
 tilbudsverdi += tall(prosjekt.tillegg?.frakt);
 tilbudsverdi += tall(prosjekt.tillegg?.annet);
 
+const rabattFelt = document.getElementById("tilbudRabatt");
+const rabatt = rabattFelt ? tall(rabattFelt.value) : 0;
+
+prosjekt.rabatt = rabatt;
+prosjekt.tilbudsverdi_for_rabatt = tilbudsverdi;
+
+const rabattBelop = tilbudsverdi * (rabatt / 100);
+tilbudsverdi = tilbudsverdi - rabattBelop;
+
+prosjekt.rabatt_belop = rabattBelop;
 prosjekt.tilbudsverdi = tilbudsverdi;
 
 console.log("Beregnet tilbudsverdi:", tilbudsverdi);
