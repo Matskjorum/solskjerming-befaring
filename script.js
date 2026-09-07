@@ -179,6 +179,7 @@ async function hentProsjekterFraSupabase() {
   prosjekter = data.map(p => ({
     id: String(p.id),
     supabaseId: p.id,
+    kunde_id: p.kunde_id ?? null,
     prosjektNr: p.prosjekt_nr || "",
     kundeNavn: p.kundenavn || "",
     adresse: p.adresse || "",
