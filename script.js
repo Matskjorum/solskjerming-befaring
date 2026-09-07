@@ -419,6 +419,7 @@ async function visKundekort(kundeId) {
   innhold.innerHTML = `
   <div class="card">
     <h3>${kunde.kundenavn || "Uten navn"}</h3>
+    <button onclick="redigerKunde(${kunde.id})">✏️ Rediger kunde</button>
 
     <p><strong>Kundetype:</strong> ${kunde.kundetype || "-"}</p>
     <p><strong>Kontaktperson:</strong> ${kunde.kontaktperson || "-"}</p>
