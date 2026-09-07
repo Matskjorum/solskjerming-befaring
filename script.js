@@ -281,6 +281,56 @@ function visNyKunde() {
 
   skjema.style.display = "block";
 }
+async function lagreNyKunde() {
+  const kundenavn = document.getElementById("nyKundeNavn").value.trim();
+  const kundetype = document.getElementById("nyKundeType").value;
+  const kundeklasse = document.getElementById("nyKundeKlasse").value;
+  const kontaktperson = document.getElementById("nyKundeKontaktperson").value.trim();
+  const adresse = document.getElementById("nyKundeAdresse").value.trim();
+  const poststed = document.getElementById("nyKundePoststed").value.trim();
+  const telefon = document.getElementById("nyKundeTelefon").value.trim();
+  const epost = document.getElementById("nyKundeEpost").value.trim();
+
+  if (!kundenavn) {
+    alert("Skriv inn kundenavn.");
+    return;
+  }
+
+  let standardPaslag = 40;
+
+  if (kundeklasse === "A") standardPaslag = 20;
+  if (kundeklasse === "B") standardPaslag = 30;
+
+  const { data: userData } = await supabaseClient.auth.getUser();
+  const brukerId = userData?.user?.id || null;
+
+  const { error } = await supabaseClient
+    .from("Kunder")
+    .insert({
+      kundenavn: kundenavn,
+      kundetype: kundetype,
+      kundeklasse: kundeklasse,
+      standard_paslag: standardPaslag,
+      kontaktperson: kontaktperson || null,
+      adresse: adresse || null,
+      poststed: poststed || null,
+      telefon: telefon || null,
+      epost: epost || null,
+      opprettet_av: brukerId
+    });
+
+  if (error) {
+    console.error("Feil ved lagring av kunde:", error);
+    alert("Kunne ikke lagre kunden.");
+    return;
+  }
+
+  document.getElementById("nyKundeSkjema").style.display = "none";
+
+  await hentKunder();
+
+  alert("Kunden er lagret.");
+}
 async function hentKunder() {
   const kundeListe = document.getElementById("kundeListe");
   if (!kundeListe) return;
