@@ -374,6 +374,30 @@ kundeListe.innerHTML = data.map(kunde => `
   </div>
 `).join("");
 }
+async function hentKunderTilProsjekt() {
+  const velger = document.getElementById("prosjektKunde");
+  if (!velger) return;
+
+  const { data, error } = await supabaseClient
+    .from("Kunder")
+    .select("id, kundenavn")
+    .order("kundenavn", { ascending: true });
+
+  if (error) {
+    console.error("Kunne ikke hente kunder til prosjekt:", error);
+    return;
+  }
+
+  velger.innerHTML = '<option value="">-- Velg kunde --</option>';
+
+  data.forEach(kunde => {
+    velger.innerHTML += `
+      <option value="${kunde.id}">
+        ${kunde.kundenavn || "Uten navn"}
+      </option>
+    `;
+  });
+}
 function filtrerKunder() {
   const sokefelt = document.getElementById("kundeSok");
   const kundeListe = document.getElementById("kundeListe");
