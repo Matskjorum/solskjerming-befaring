@@ -351,18 +351,18 @@ async function hentKunder() {
     return;
   }
 
-  kundeListe.innerHTML = data.map(kunde => `
-    <div class="oppfolging-rad">
-      <div>
-        <strong>${kunde.kundenavn || "Uten navn"}</strong><br>
-        <small>
-          ${kunde.kundetype || "Ukjent kundetype"} ·
-          ${kunde.kundeklasse || "C"}-kunde ·
-          ${kunde.standard_paslag ?? 40}% påslag
-        </small>
-      </div>
+ kundeListe.innerHTML = data.map(kunde => `
+  <div class="oppfolging-rad" onclick="visKundekort(${kunde.id})" style="cursor:pointer;">
+    <div>
+      <strong>${kunde.kundenavn || "Uten navn"}</strong><br>
+      <small>
+        ${kunde.kundetype || "Ukjent kundetype"} ·
+        ${kunde.kundeklasse || "C"}-kunde ·
+        ${kunde.standard_paslag ?? 40}% påslag
+      </small>
     </div>
-  `).join("");
+  </div>
+`).join("");
 }
 
 function oppdaterStartside() {
