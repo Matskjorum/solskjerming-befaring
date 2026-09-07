@@ -1070,7 +1070,23 @@ felt.forEach(id => {
     visProsjektListe();
   });
 });
+function oppdaterPrisOversikt() {
+  const innkjopspris = Number(document.getElementById("pris")?.value) || 0;
+  const prosjekt = hentAktivtProsjekt();
 
+  const kundeklasse = prosjekt?.kundeklasse || "C";
+  const paslag = Number(prosjekt?.standard_paslag ?? 40);
+  const salgspris = innkjopspris * (1 + paslag / 100);
+
+  document.getElementById("visInnkjopspris").textContent =
+    innkjopspris.toLocaleString("nb-NO") + " kr";
+
+  document.getElementById("visSalgspris").textContent =
+    salgspris.toLocaleString("nb-NO") + " kr";
+
+  document.getElementById("visKundeklasse").textContent = kundeklasse;
+  document.getElementById("visPaslag").textContent = paslag;
+}
 function lagreVindu() {
   const plassering = document.getElementById("plassering").value;
   const type = document.getElementById("type").value;
