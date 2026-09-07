@@ -275,6 +275,12 @@ function visKunder() {
   }
   hentKunder();
 }
+function visNyKunde() {
+  const skjema = document.getElementById("nyKundeSkjema");
+  if (!skjema) return;
+
+  skjema.style.display = "block";
+}
 async function hentKunder() {
   const kundeListe = document.getElementById("kundeListe");
   if (!kundeListe) return;
