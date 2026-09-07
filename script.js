@@ -436,6 +436,73 @@ async function visKundekort(kundeId) {
   </div>
 `;
 }
+async function redigerKunde(kundeId) {
+  const { data: kunde, error } = await supabaseClient
+    .from("Kunder")
+    .select("*")
+    .eq("id", kundeId)
+    .single();
+
+  if (error || !kunde) {
+    console.error("Kunne ikke hente kunde for redigering:", error);
+    alert("Kunne ikke hente kunden.");
+    return;
+  }
+
+  const nyttNavn = prompt("Kundenavn:", kunde.kundenavn || "");
+  if (nyttNavn === null) return;
+
+  const nyKontaktperson = prompt("Kontaktperson:", kunde.kontaktperson || "");
+  if (nyKontaktperson === null) return;
+
+  const nyAdresse = prompt("Adresse:", kunde.adresse || "");
+  if (nyAdresse === null) return;
+
+  const nyttPoststed = prompt("Poststed:", kunde.poststed || "");
+  if (nyttPoststed === null) return;
+
+  const nyTelefon = prompt("Telefon:", kunde.telefon || "");
+  if (nyTelefon === null) return;
+
+  const nyEpost = prompt("E-post:", kunde.epost || "");
+  if (nyEpost === null) return;
+
+  const nyKundeklasse = prompt(
+    "Kundeklasse: A, B eller C",
+    kunde.kundeklasse || "C"
+  );
+
+  if (nyKundeklasse === null) return;
+
+  const klasse = nyKundeklasse.toUpperCase();
+
+  let standardPaslag = 40;
+  if (klasse === "A") standardPaslag = 20;
+  if (klasse === "B") standardPaslag = 30;
+
+  const { error: updateError } = await supabaseClient
+    .from("Kunder")
+    .update({
+      kundenavn: nyttNavn.trim(),
+      kontaktperson: nyKontaktperson.trim() || null,
+      adresse: nyAdresse.trim() || null,
+      poststed: nyttPoststed.trim() || null,
+      telefon: nyTelefon.trim() || null,
+      epost: nyEpost.trim() || null,
+      kundeklasse: klasse,
+      standard_paslag: standardPaslag
+    })
+    .eq("id", kundeId);
+
+  if (updateError) {
+    console.error("Feil ved oppdatering av kunde:", updateError);
+    alert("Kunne ikke oppdatere kunden.");
+    return;
+  }
+
+  await visKundekort(kundeId);
+  alert("Kunden er oppdatert.");
+}
 function oppdaterStartside() {
   const idag = new Date();
   idag.setHours(0, 0, 0, 0);
