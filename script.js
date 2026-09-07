@@ -383,16 +383,23 @@ async function visKundekort(kundeId) {
   const innhold = document.getElementById("kundekortInnhold");
 
   innhold.innerHTML = `
-    <p><strong>Kundenavn:</strong> ${kunde.kundenavn || "-"}</p>
+  <div class="card">
+    <h3>${kunde.kundenavn || "Uten navn"}</h3>
+
     <p><strong>Kundetype:</strong> ${kunde.kundetype || "-"}</p>
-    <p><strong>Kundeklasse:</strong> ${kunde.kundeklasse || "C"}-kunde</p>
-    <p><strong>Standard påslag:</strong> ${kunde.standard_paslag ?? 40} %</p>
     <p><strong>Kontaktperson:</strong> ${kunde.kontaktperson || "-"}</p>
-    <p><strong>Adresse:</strong> ${kunde.adresse || "-"}</p>
-    <p><strong>Poststed:</strong> ${kunde.poststed || "-"}</p>
     <p><strong>Telefon:</strong> ${kunde.telefon || "-"}</p>
     <p><strong>E-post:</strong> ${kunde.epost || "-"}</p>
-  `;
+    <p><strong>Adresse:</strong> ${kunde.adresse || "-"}</p>
+    <p><strong>Poststed:</strong> ${kunde.poststed || "-"}</p>
+  </div>
+
+  <div class="card">
+    <h3>💰 Prisavtale</h3>
+    <p><strong>Kundeklasse:</strong> ${kunde.kundeklasse || "C"}-kunde</p>
+    <p><strong>Standard påslag:</strong> ${kunde.standard_paslag ?? 40} %</p>
+  </div>
+`;
 }
 function oppdaterStartside() {
   const idag = new Date();
