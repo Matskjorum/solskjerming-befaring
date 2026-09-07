@@ -375,8 +375,18 @@ kundeListe.innerHTML = data.map(kunde => `
 `).join("");
 }
 function filtrerKunder() {
-  const sok = document.getElementById("kundeSok").value.toLowerCase();
-  const rader = document.querySelectorAll("#kundeListe > div");
+  const sokefelt = document.getElementById("kundeSok");
+  const kundeListe = document.getElementById("kundeListe");
+
+  if (!sokefelt || !kundeListe) return;
+
+  const sok = sokefelt.value.toLowerCase().trim();
+  const rader = kundeListe.querySelectorAll(":scope > div");
+
+  const register = kundeListe.closest("details");
+  if (register && sok.length > 0) {
+    register.open = true;
+  }
 
   rader.forEach(rad => {
     const tekst = rad.textContent.toLowerCase();
