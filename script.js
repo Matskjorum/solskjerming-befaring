@@ -1301,7 +1301,8 @@ html += `
         <p><strong>Type:</strong> ${vindu.type}</p>
         <p><strong>Motor:</strong> ${vindu.motor || "-"}</p>
         <p><strong>Mål:</strong> ${vindu.bredde} x ${vindu.hoyde} mm</p>
-        <p><strong>Produktpris:</strong> ${vindu.pris || "0"} kr eks. mva</p>
+        <p><strong>Innkjøpspris:</strong> ${Number(vindu.innkjopspris || 0).toLocaleString("nb-NO")} kr eks. mva</p>
+<p><strong>Salgspris:</strong> ${Number(vindu.pris || 0).toLocaleString("nb-NO")} kr eks. mva</p>
 <p><strong>Montasje:</strong> ${vindu.montasje || "0"} kr eks. mva</p>
         <p><strong>Kassefarge:</strong> ${vindu.kassefarge || "-"}</p>
 <p><strong>Duk:</strong> ${vindu.duk || "-"}</p>
