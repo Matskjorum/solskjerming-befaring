@@ -426,6 +426,8 @@ async function velgKundeTilProsjekt(kundeId) {
   const prosjekt = hentAktivtProsjekt();
   if (prosjekt) {
     prosjekt.kunde_id = kunde.id;
+    prosjekt.kundeklasse = kunde.kundeklasse || "C";
+prosjekt.standard_paslag = Number(kunde.standard_paslag ?? 40);
     prosjekt.kundeNavn = kunde.kundenavn || "";
     prosjekt.adresse = kunde.adresse || "";
     prosjekt.poststed = kunde.poststed || "";
