@@ -262,6 +262,18 @@ function visStartside() {
 
   oppdaterStartside();
 }
+function visKunder() {
+  document.getElementById("startSide").style.display = "none";
+  document.getElementById("kunderSide").style.display = "block";
+  document.getElementById("prosjektForside").style.display = "none";
+  document.getElementById("prosjektArbeidsflate").style.display = "none";
+  document.getElementById("salgSide").style.display = "none";
+
+  const meny = document.getElementById("sideMeny");
+  if (meny) {
+    meny.classList.remove("apen");
+  }
+}
 function oppdaterStartside() {
   const idag = new Date();
   idag.setHours(0, 0, 0, 0);
