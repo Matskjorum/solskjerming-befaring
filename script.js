@@ -439,6 +439,7 @@ prosjekt.standard_paslag = Number(kunde.standard_paslag ?? 40);
     prosjekt.epost = kunde.epost || "";
 
     lagreProsjekter();
+    oppdaterPrisOversikt();
   }
 }
 function filtrerKunder() {
