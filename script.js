@@ -121,10 +121,13 @@ console.log("DATA TIL SUPABASE:", prosjektData);
   const erSkyProsjekt = !!prosjekt.supabaseId;
 
   if (erSkyProsjekt) {
-    const { error } = await supabaseClient
-      .from("Prosjekter")
-      .update(prosjektData)
-      .eq("id", prosjekt.supabaseId);
+    const { data, error } = await supabaseClient
+  .from("Prosjekter")
+  .update(prosjektData)
+  .eq("id", prosjekt.supabaseId)
+  .select("id, kunde_id");
+
+console.log("RESULTAT FRA UPDATE:", data, error);
 
     if (error) {
       console.error("Feil ved oppdatering:", error);
