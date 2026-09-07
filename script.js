@@ -273,7 +273,42 @@ function visKunder() {
   if (meny) {
     meny.classList.remove("apen");
   }
+  hentKunder();
 }
+async function hentKunder() {
+  const kundeListe = document.getElementById("kundeListe");
+  if (!kundeListe) return;
+
+  const { data, error } = await supabaseClient
+    .from("Kunder")
+    .select("*")
+    .order("kundenavn", { ascending: true });
+
+  if (error) {
+    console.error("Feil ved henting av kunder:", error);
+    kundeListe.innerHTML = "<p>Kunne ikke hente kunder.</p>";
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    kundeListe.innerHTML = "<p>Ingen kunder registrert ennå.</p>";
+    return;
+  }
+
+  kundeListe.innerHTML = data.map(kunde => `
+    <div class="oppfolging-rad">
+      <div>
+        <strong>${kunde.kundenavn || "Uten navn"}</strong><br>
+        <small>
+          ${kunde.kundetype || "Ukjent kundetype"} ·
+          ${kunde.kundeklasse || "C"}-kunde ·
+          ${kunde.standard_paslag ?? 40}% påslag
+        </small>
+      </div>
+    </div>
+  `).join("");
+}
+
 function oppdaterStartside() {
   const idag = new Date();
   idag.setHours(0, 0, 0, 0);
