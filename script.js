@@ -1075,7 +1075,10 @@ function lagreVindu() {
   const motor = document.getElementById("motor").value;
   const bredde = document.getElementById("bredde").value;
   const hoyde = document.getElementById("hoyde").value;
-  const pris = document.getElementById("pris").value;
+  const innkjopspris = Number(document.getElementById("pris").value) || 0;
+const prosjekt = hentAktivtProsjekt();
+const paslag = Number(prosjekt?.standard_paslag ?? 40);
+const pris = innkjopspris * (1 + paslag / 100);
 const montasje = document.getElementById("montasje").value;
  const kassefarge = document.getElementById("kassefarge").value;
 const duk = document.getElementById("duk").value;
@@ -1086,7 +1089,7 @@ const brakett = document.getElementById("brakett").value;
   alert("Fyll inn plassering, type, motor, bredde og høyde.");
   return;
 }
-const prosjekt = hentAktivtProsjekt();
+
 
 if (!prosjekt) {
   alert("Opprett et prosjekt først.");
@@ -1124,7 +1127,8 @@ if (harAndreVinduer) {
   kassefarge,
   duk,
   brakett,
-   pris,
+  innkjopspris,
+  pris,
   montasje,
   kommentar
 };
