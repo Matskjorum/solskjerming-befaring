@@ -374,6 +374,20 @@ kundeListe.innerHTML = data.map(kunde => `
   </div>
 `).join("");
 }
+function filtrerKunder() {
+  const sok = document.getElementById("kundeSok").value.toLowerCase();
+  const rader = document.querySelectorAll("#kundeListe > div");
+
+  rader.forEach(rad => {
+    const tekst = rad.textContent.toLowerCase();
+
+    if (tekst.includes(sok)) {
+      rad.style.display = "grid";
+    } else {
+      rad.style.display = "none";
+    }
+  });
+}
 async function visKundekort(kundeId) {
   const { data: kunde, error } = await supabaseClient
     .from("Kunder")
