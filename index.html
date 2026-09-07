@@ -365,6 +365,11 @@
     <details class="card" open>
   <summary>👤 Kundeinfo</summary>
 
+     <label><strong>Velg kunde fra kunderegister</strong></label>
+<select id="prosjektKunde" onchange="velgKundeTilProsjekt(this.value)">
+  <option value="">-- Velg kunde --</option>
+</select>
+      
       <input id="kundeNavn" placeholder="Kundenavn" />
       <input id="adresse" placeholder="Adresse" />
       <input id="poststed" placeholder="Postnr / sted" />
