@@ -2433,8 +2433,12 @@ function velgStatus(status) {
 
   localStorage.setItem("aktivStatus", aktivStatus);
   
+  document.getElementById("startSide").style.display = "none";
+document.getElementById("kunderSide").style.display = "none";
+document.getElementById("kundekortSide").style.display = "none";
 document.getElementById("salgSide").style.display = "none";
 document.getElementById("prosjektArbeidsflate").style.display = "none";
+
 document.getElementById("prosjektForside").style.display = "block";
   
   visProsjektListe();
