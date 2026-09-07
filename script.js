@@ -2308,6 +2308,18 @@ function visTilbud() {
     placeholder="Annet"
     value="${prosjekt.tillegg?.annet || ""}"
   >
+  <hr>
+
+<label><strong>Rabatt på hele tilbudet (%)</strong></label>
+<input
+  id="tilbudRabatt"
+  type="number"
+  min="0"
+  max="100"
+  step="0.1"
+  placeholder="0"
+  value="${prosjekt.rabatt || 0}"
+>
 `;
   let produktSum = 0;
 let montasjeSum = 0;
