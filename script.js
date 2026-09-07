@@ -185,6 +185,8 @@ async function hentProsjekterFraSupabase() {
     id: String(p.id),
     supabaseId: p.id,
     kunde_id: p.kunde_id ?? null,
+    kundeklasse: p.kundeklasse || "C",
+standard_paslag: Number(p.standard_paslag ?? 40),
     prosjektNr: p.prosjekt_nr || "",
     kundeNavn: p.kundenavn || "",
     adresse: p.adresse || "",
