@@ -2236,14 +2236,19 @@ function visTilbud() {
         <p><strong>Type:</strong> ${vindu.type || "-"}</p>
         <p><strong>Motor:</strong> ${vindu.motor || "-"}</p>
         <p><strong>Mål:</strong> ${vindu.bredde} x ${vindu.hoyde} mm</p>
+<p>
+  <strong>Innkjøpspris:</strong>
+  ${Number(vindu.innkjopspris || 0).toLocaleString("nb-NO")} kr eks. mva.
+</p>
 
+<label><strong>Salgspris eks. mva.</strong></label>
         <input
           id="tilbudPris_${index}"
           type="number"
-          placeholder="Produktpris eks. mva"
+          placeholder="Salgspris eks. mva."
           value="${vindu.pris || ""}"
         >
-
+<label><strong>Montasje eks. mva.</strong></label>
         <input
           id="tilbudMontasje_${index}"
           type="number"
