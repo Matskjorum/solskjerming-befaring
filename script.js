@@ -353,14 +353,35 @@ async function hentKunder() {
   }
 
  kundeListe.innerHTML = data.map(kunde => `
-  <div class="oppfolging-rad" onclick="visKundekort(${kunde.id})" style="cursor:pointer;">
-    <div>
-      <strong>${kunde.kundenavn || "Uten navn"}</strong><br>
-      <small>
-        ${kunde.kundetype || "Ukjent kundetype"} ·
-        ${kunde.kundeklasse || "C"}-kunde ·
-        ${kunde.standard_paslag ?? 40}% påslag
-      </small>
+  <div class="card" style="margin-top:12px;">
+    <div style="display:flex; justify-content:space-between; gap:20px; align-items:center;">
+
+      <div>
+        <h3 style="margin:0 0 6px 0;">
+          ${kunde.kundenavn || "Uten navn"}
+        </h3>
+
+        <p style="margin:3px 0;">
+          <strong>Type:</strong> ${kunde.kundetype || "-"}
+        </p>
+
+        <p style="margin:3px 0;">
+          <strong>Kundeklasse:</strong>
+          ${kunde.kundeklasse || "C"}-kunde ·
+          ${kunde.standard_paslag ?? 40}% påslag
+        </p>
+
+        <p style="margin:3px 0;">
+          <strong>Kontakt:</strong>
+          ${kunde.kontaktperson || "-"}
+          ${kunde.telefon ? " · " + kunde.telefon : ""}
+        </p>
+      </div>
+
+      <button onclick="visKundekort(${kunde.id})">
+        Åpne
+      </button>
+
     </div>
   </div>
 `).join("");
