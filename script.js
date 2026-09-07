@@ -364,7 +364,36 @@ async function hentKunder() {
   </div>
 `).join("");
 }
+async function visKundekort(kundeId) {
+  const { data: kunde, error } = await supabaseClient
+    .from("Kunder")
+    .select("*")
+    .eq("id", kundeId)
+    .single();
 
+  if (error || !kunde) {
+    console.error("Kunne ikke hente kunde:", error);
+    alert("Kunne ikke åpne kunden.");
+    return;
+  }
+
+  document.getElementById("kunderSide").style.display = "none";
+  document.getElementById("kundekortSide").style.display = "block";
+
+  const innhold = document.getElementById("kundekortInnhold");
+
+  innhold.innerHTML = `
+    <p><strong>Kundenavn:</strong> ${kunde.kundenavn || "-"}</p>
+    <p><strong>Kundetype:</strong> ${kunde.kundetype || "-"}</p>
+    <p><strong>Kundeklasse:</strong> ${kunde.kundeklasse || "C"}-kunde</p>
+    <p><strong>Standard påslag:</strong> ${kunde.standard_paslag ?? 40} %</p>
+    <p><strong>Kontaktperson:</strong> ${kunde.kontaktperson || "-"}</p>
+    <p><strong>Adresse:</strong> ${kunde.adresse || "-"}</p>
+    <p><strong>Poststed:</strong> ${kunde.poststed || "-"}</p>
+    <p><strong>Telefon:</strong> ${kunde.telefon || "-"}</p>
+    <p><strong>E-post:</strong> ${kunde.epost || "-"}</p>
+  `;
+}
 function oppdaterStartside() {
   const idag = new Date();
   idag.setHours(0, 0, 0, 0);
