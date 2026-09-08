@@ -2376,6 +2376,9 @@ html += `
 
     <hr>
 
+    <p><strong>Sum før rabatt:</strong> ${sumForRabatt.toLocaleString("no-NO")} kr</p>
+    <p><strong>Rabatt ${rabatt}%:</strong> -${rabattBelop.toLocaleString("no-NO")} kr</p>
+
     <p><strong>Sum eks mva:</strong>
     ${sumEks.toLocaleString("no-NO")} kr</p>
 
