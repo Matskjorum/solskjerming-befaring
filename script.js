@@ -2333,6 +2333,13 @@ function visTilbud() {
     value="${prosjekt.tillegg?.frakt || ""}"
   >
 
+<input
+  id="tillegg_braketter"
+  type="number"
+  placeholder="Braketter"
+  value="${prosjekt.tillegg?.braketter || ""}"
+>
+
   <input
     id="tillegg_annet"
     type="number"
@@ -2377,6 +2384,7 @@ const tilleggSum =
   Number(prosjekt.tillegg?.lift || 0) +
   Number(prosjekt.tillegg?.elektro || 0) +
   Number(prosjekt.tillegg?.frakt || 0) +
+  Number(prosjekt.tillegg?.braketter || 0) +
   Number(prosjekt.tillegg?.annet || 0);
 
 const sumForRabatt =
@@ -2450,6 +2458,7 @@ prosjekt.tillegg = {
   lift: document.getElementById("tillegg_lift")?.value || "",
   elektro: document.getElementById("tillegg_elektro")?.value || "",
   frakt: document.getElementById("tillegg_frakt")?.value || "",
+  braketter: document.getElementById("tillegg_braketter")?.value || "",
   annet: document.getElementById("tillegg_annet")?.value || ""
 };
 const tall = verdi => {
@@ -2472,6 +2481,7 @@ tilbudsverdi += tall(prosjekt.tillegg?.stillas);
 tilbudsverdi += tall(prosjekt.tillegg?.lift);
 tilbudsverdi += tall(prosjekt.tillegg?.elektro);
 tilbudsverdi += tall(prosjekt.tillegg?.frakt);
+  tilbudsverdi += tall(prosjekt.tillegg?.braketter);
 tilbudsverdi += tall(prosjekt.tillegg?.annet);
 
 const rabattFelt = document.getElementById("tilbudRabatt");
@@ -2545,6 +2555,7 @@ function eksporterTilbudsPDF() {
     Number(prosjekt.tillegg?.lift || 0) +
     Number(prosjekt.tillegg?.elektro || 0) +
     Number(prosjekt.tillegg?.frakt || 0) +
+    Number(prosjekt.tillegg?.braketter || 0) +
     Number(prosjekt.tillegg?.annet || 0);
 
   const sumForRabatt = produktSum + montasjeSum + styringSum + tilleggSum;
@@ -2689,7 +2700,7 @@ y = 50;
 
     y += 8;
   }
-  const summeringHoyde = 7 + (9 * 9);
+  const summeringHoyde = 7 + (10 * 9);
 
 if (y + summeringHoyde > 275) {
   doc.addPage();
@@ -2701,11 +2712,15 @@ if (y + summeringHoyde > 275) {
   doc.text("Summering", 15, y);
   y += 7;
 
-  const summering = [
+  const braketterSum = Number(prosjekt.tillegg?.braketter || 0);
+const andreTilleggSum = tilleggSum - braketterSum;
+
+const summering = [
   ["Produkter", produktSum],
   ["Montasje", montasjeSum],
   ["Styring", styringSum],
-  ["Tillegg", tilleggSum],
+  ["Braketter", braketterSum],
+  ["Andre tillegg", andreTilleggSum],
   ["Sum før rabatt", sumForRabatt],
   [`Rabatt ${rabatt}%`, -rabattBelop],
   ["Sum eks. mva", sumEks],
@@ -2716,7 +2731,7 @@ if (y + summeringHoyde > 275) {
   summering.forEach((rad, index) => {
     doc.setDrawColor(...border);
 
-    if (index === 8) {
+    if (index === 9) {
       doc.setFillColor(230, 240, 250);
       doc.rect(15, y, 180, 9, "F");
     }
