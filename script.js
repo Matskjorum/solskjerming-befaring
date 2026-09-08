@@ -1700,7 +1700,15 @@ function visProsjektListe() {
   avslatt: "Ikke akseptert"
 };
 
-  const filtrerteProsjekter = prosjekter.filter(p => (p.status || "befaring") === aktivStatus);
+  const filtrerteProsjekter = prosjekter.filter(p => {
+  const status = p.status || "befaring";
+
+  if (aktivStatus === "befaring") {
+    return status === "befaring" || status === "befaring_ferdig";
+  }
+
+  return status === aktivStatus;
+});
   filtrerteProsjekter.forEach(p => {
     const aktiv = p.id === aktivtProsjektId ? "aktivt-prosjekt" : "";
 
