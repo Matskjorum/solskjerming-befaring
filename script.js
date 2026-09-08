@@ -2519,10 +2519,14 @@ function eksporterTilbudsPDF() {
     Number(prosjekt.tillegg?.frakt || 0) +
     Number(prosjekt.tillegg?.annet || 0);
 
-  const sumEks = produktSum + montasjeSum + styringSum + tilleggSum;
-  const mva = sumEks * 0.25;
-  const total = sumEks + mva;
+  const sumForRabatt = produktSum + montasjeSum + styringSum + tilleggSum;
 
+const rabatt = Number(prosjekt.rabatt || 0);
+const rabattBelop = sumForRabatt * (rabatt / 100);
+
+const sumEks = sumForRabatt - rabattBelop;
+const mva = sumEks * 0.25;
+const total = sumEks + mva;
   function penger(tall) {
     return `${Number(tall || 0).toLocaleString("no-NO")} kr`;
   }
@@ -2658,19 +2662,21 @@ y = 50;
   y += 7;
 
   const summering = [
-    ["Produkter", produktSum],
-    ["Montasje", montasjeSum],
-    ["Styring", styringSum],
-    ["Tillegg", tilleggSum],
-    ["Sum eks. mva", sumEks],
-    ["MVA 25%", mva],
-    ["Total inkl. mva", total]
-  ];
+  ["Produkter", produktSum],
+  ["Montasje", montasjeSum],
+  ["Styring", styringSum],
+  ["Tillegg", tilleggSum],
+  ["Sum før rabatt", sumForRabatt],
+  [`Rabatt ${rabatt}%`, -rabattBelop],
+  ["Sum eks. mva", sumEks],
+  ["MVA 25%", mva],
+  ["Total inkl. mva", total]
+];
 
   summering.forEach((rad, index) => {
     doc.setDrawColor(...border);
 
-    if (index === 6) {
+    if (index === 8) {
       doc.setFillColor(230, 240, 250);
       doc.rect(15, y, 180, 9, "F");
     }
