@@ -1304,6 +1304,7 @@ html += `
   type="number"
   placeholder="Innkjøpspris eks. mva."
   value="${vindu.innkjopspris || ""}"
+  oninput="oppdaterTilbudSalgspris(${index})"
 >
 <p><strong>Salgspris:</strong> ${Number(vindu.pris || 0).toLocaleString("nb-NO")} kr eks. mva</p>
 <p><strong>Montasje:</strong> ${vindu.montasje || "0"} kr eks. mva</p>
@@ -2223,6 +2224,22 @@ async function hentAktiviteter() {
       </div>
     `;
   }).join("");
+}
+function oppdaterTilbudSalgspris(index) {
+  const prosjekt = hentAktivtProsjekt();
+  if (!prosjekt) return;
+
+  const innkjopsprisFelt = document.getElementById(`tilbudInnkjopspris_${index}`);
+  const salgsprisFelt = document.getElementById(`tilbudPris_${index}`);
+
+  if (!innkjopsprisFelt || !salgsprisFelt) return;
+
+  const innkjopspris = Number(innkjopsprisFelt.value) || 0;
+  const paslag = Number(prosjekt.standard_paslag ?? 40);
+
+  const salgspris = innkjopspris * (1 + paslag / 100);
+
+  salgsprisFelt.value = Math.round(salgspris);
 }
 function visTilbud() {
   const oversikt = document.getElementById("oversikt");
