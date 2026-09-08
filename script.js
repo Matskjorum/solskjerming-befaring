@@ -1298,16 +1298,7 @@ html += `
         <p><strong>Type:</strong> ${vindu.type}</p>
         <p><strong>Motor:</strong> ${vindu.motor || "-"}</p>
         <p><strong>Mål:</strong> ${vindu.bredde} x ${vindu.hoyde} mm</p>
-        <label><strong>Innkjøpspris eks. mva.</strong></label>
-<input
-  id="tilbudInnkjopspris_${index}"
-  type="number"
-  placeholder="Innkjøpspris eks. mva."
-  value="${vindu.innkjopspris || ""}"
-  oninput="oppdaterTilbudSalgspris(${index})"
->
-<p><strong>Salgspris:</strong> ${Number(vindu.pris || 0).toLocaleString("nb-NO")} kr eks. mva</p>
-<p><strong>Montasje:</strong> ${vindu.montasje || "0"} kr eks. mva</p>
+      
         <p><strong>Kassefarge:</strong> ${vindu.kassefarge || "-"}</p>
 <p><strong>Duk:</strong> ${vindu.duk || "-"}</p>
 <p><strong>Brakett:</strong> ${vindu.brakett || "-"}</p>
@@ -2263,9 +2254,17 @@ function visTilbud() {
         <p><strong>Type:</strong> ${vindu.type || "-"}</p>
         <p><strong>Motor:</strong> ${vindu.motor || "-"}</p>
         <p><strong>Mål:</strong> ${vindu.bredde} x ${vindu.hoyde} mm</p>
-<p>
-  <strong>Innkjøpspris:</strong>
-  ${Number(vindu.innkjopspris || 0).toLocaleString("nb-NO")} kr eks. mva.
+<label><strong>Innkjøpspris eks. mva.</strong></label>
+<input
+  id="tilbudInnkjopspris_${index}"
+  type="number"
+  placeholder="Innkjøpspris eks. mva."
+  value="${vindu.innkjopspris || ""}"
+  oninput="oppdaterTilbudSalgspris(${index})"
+>
+
+<p style="font-size:13px; color:#666; margin-top:5px;">
+  Kundeklasse: ${prosjekt.kundeklasse || "C"} • Påslag: ${Number(prosjekt.standard_paslag ?? 40)} %
 </p>
 
 <label><strong>Salgspris eks. mva.</strong></label>
