@@ -1302,7 +1302,13 @@ html += `
         <p><strong>Type:</strong> ${vindu.type}</p>
         <p><strong>Motor:</strong> ${vindu.motor || "-"}</p>
         <p><strong>Mål:</strong> ${vindu.bredde} x ${vindu.hoyde} mm</p>
-        <p><strong>Innkjøpspris:</strong> ${Number(vindu.innkjopspris || 0).toLocaleString("nb-NO")} kr eks. mva</p>
+        <label><strong>Innkjøpspris eks. mva.</strong></label>
+<input
+  id="tilbudInnkjopspris_${index}"
+  type="number"
+  placeholder="Innkjøpspris eks. mva."
+  value="${vindu.innkjopspris || ""}"
+>
 <p><strong>Salgspris:</strong> ${Number(vindu.pris || 0).toLocaleString("nb-NO")} kr eks. mva</p>
 <p><strong>Montasje:</strong> ${vindu.montasje || "0"} kr eks. mva</p>
         <p><strong>Kassefarge:</strong> ${vindu.kassefarge || "-"}</p>
@@ -2414,9 +2420,11 @@ function lagreTilbudspriser() {
   if (!prosjekt) return;
 
   prosjekt.vinduer.forEach((vindu, index) => {
+    const innkjopsprisFelt = document.getElementById(`tilbudInnkjopspris_${index}`);
     const prisFelt = document.getElementById(`tilbudPris_${index}`);
     const montasjeFelt = document.getElementById(`tilbudMontasje_${index}`);
 
+    vindu.innkjopspris = innkjopsprisFelt ? innkjopsprisFelt.value : "";
     vindu.pris = prisFelt ? prisFelt.value : "";
     vindu.montasje = montasjeFelt ? montasjeFelt.value : "";
   });
