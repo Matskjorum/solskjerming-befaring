@@ -2353,15 +2353,18 @@ const tilleggSum =
   Number(prosjekt.tillegg?.frakt || 0) +
   Number(prosjekt.tillegg?.annet || 0);
 
-const sumEks =
+const sumForRabatt =
   produktSum +
   montasjeSum +
   styringSum +
   tilleggSum;
 
+const rabatt = Number(prosjekt.rabatt || 0);
+const rabattBelop = sumForRabatt * (rabatt / 100);
+
+const sumEks = sumForRabatt - rabattBelop;
 const mva = sumEks * 0.25;
 const total = sumEks + mva;
-
 html += `
   <div class="card">
     <h2>📊 Kalkyle</h2>
