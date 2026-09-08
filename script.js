@@ -2325,6 +2325,11 @@ function visTilbud() {
   placeholder="0"
   value="${prosjekt.rabatt || 0}"
 >
+<div style="margin-top:12px; padding:12px; background:#f5f5f5; border-radius:6px;">
+  <p><strong>Sum før rabatt:</strong> ${Number(prosjekt.tilbudsverdi_for_rabatt || 0).toLocaleString("nb-NO")} kr</p>
+  <p><strong>Rabatt:</strong> ${Number(prosjekt.rabatt || 0)} % (${Number(prosjekt.rabatt_belop || 0).toLocaleString("nb-NO")} kr)</p>
+  <p><strong>Tilbudssum etter rabatt:</strong> ${Number(prosjekt.tilbudsverdi || 0).toLocaleString("nb-NO")} kr eks. mva.</p>
+</div>
 `;
   let produktSum = 0;
 let montasjeSum = 0;
