@@ -1094,10 +1094,9 @@ function lagreVindu() {
   const motor = document.getElementById("motor").value;
   const bredde = document.getElementById("bredde").value;
   const hoyde = document.getElementById("hoyde").value;
-  const innkjopspris = Number(document.getElementById("pris").value) || 0;
+  const innkjopspris = 0;
+const pris = 0;
 const prosjekt = hentAktivtProsjekt();
-const paslag = Number(prosjekt?.standard_paslag ?? 40);
-const pris = innkjopspris * (1 + paslag / 100);
 const montasje = document.getElementById("montasje").value;
  const kassefarge = document.getElementById("kassefarge").value;
 const duk = document.getElementById("duk").value;
