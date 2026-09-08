@@ -1170,7 +1170,6 @@ function tomVinduSkjema() {
   document.getElementById("kassefarge").value = "";
 document.getElementById("duk").value = "";
 document.getElementById("brakett").value = "";
-  document.getElementById("pris").value = "";
 document.getElementById("montasje").value = "";
   document.getElementById("kommentar").value = "";
 }
@@ -1190,8 +1189,6 @@ function redigerVindu(index) {
   document.getElementById("kassefarge").value = vindu.kassefarge || "";
   document.getElementById("duk").value = vindu.duk || "";
   document.getElementById("brakett").value = vindu.brakett || "";
-  document.getElementById("pris").value = vindu.innkjopspris || "";
-  oppdaterPrisOversikt();
 document.getElementById("montasje").value = vindu.montasje || "";
   document.getElementById("kommentar").value = vindu.kommentar || "";
 
