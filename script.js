@@ -2632,10 +2632,6 @@ y = 50;
   y += 8;
 
   prosjekt.vinduer.forEach((v, index) => {
-    if (y > 255) {
-      doc.addPage();
-      y = 20;
-    }
 
     const beskrivelse = doc.splitTextToSize(
       `Vindu ${index + 1}: ${v.plassering || "-"} - ${v.type || "-"} / ${v.motor || "-"} - ${v.bredde} x ${v.hoyde} mm`,
@@ -2643,6 +2639,11 @@ y = 50;
     );
 
     const rowHeight = Math.max(10, beskrivelse.length * 5 + 4);
+    
+    if (y + rowHeight > 275) {
+  doc.addPage();
+  y = 20;
+}
 
     doc.setDrawColor(...border);
     doc.rect(15, y, 180, rowHeight);
