@@ -2689,7 +2689,12 @@ y = 50;
 
     y += 8;
   }
+  const summeringHoyde = 7 + (9 * 9);
 
+if (y + summeringHoyde > 275) {
+  doc.addPage();
+  y = 20;
+}
   doc.setFont(undefined, "bold");
   doc.setTextColor(...navy);
   doc.setFontSize(11);
