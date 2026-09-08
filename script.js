@@ -2528,8 +2528,14 @@ const sumEks = sumForRabatt - rabattBelop;
 const mva = sumEks * 0.25;
 const total = sumEks + mva;
   function penger(tall) {
-    return `${Number(tall || 0).toLocaleString("no-NO")} kr`;
-  }
+  const n = Number(tall || 0);
+  const fortegn = n < 0 ? "- " : "";
+  const belop = Math.abs(n)
+    .toFixed(0)
+    .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+
+  return `${fortegn}${belop} kr`;
+}
 
   let y = 15;
 
