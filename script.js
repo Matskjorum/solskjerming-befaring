@@ -2735,7 +2735,12 @@ if (y + summeringHoyde > 275) {
   });
 
   y += 12;
+const vilkarHoyde = 7 + (5 * 5) + 10 + 7 + 7;
 
+if (y + vilkarHoyde > 275) {
+  doc.addPage();
+  y = 20;
+}
   const vilkar = [
     "Tilbudet er gyldig i 30 dager.",
     "Leveringstid avklares ved bestilling.",
